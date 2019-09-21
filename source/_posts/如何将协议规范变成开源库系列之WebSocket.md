@@ -8,7 +8,7 @@ tags:
 
 这是系列文章的第一篇，也是非常重要的一篇，希望大家能读懂我想要表达的意思。
 
-# 系列文章开篇概述
+## 系列文章开篇概述
 
 相对于其他编程语言来说，Python 生态中最突出的就是第三方库。任何一个及格的 Python 开发者都使用过至少 5 款第三方库。
 
@@ -57,11 +57,11 @@ tags:
 
 
 
-# 内容介绍
+## 内容介绍
 
 这是一套系列文章，这个系列将为大家解读常见库（例如 WebSocket、HTTP、ASCII、Base64、MD5、AES、RSA）的协议规范和对应的代码实现，帮助大家「知其然，知其所以然」。
 
-## 目标
+### 目标
 
 这次我们要学习的是 WebSocket 协议规范和代码实现，也可以理解为从 0 开始编写 [aiowebsocket](https://github.com/asyncins/aiowebsocket) 库。至于为什么选择它，那大概是因为全世界没有比我更熟悉的它的人了。
 
@@ -69,7 +69,7 @@ tags:
 
 我是 aiowebsocket 库的作者，我花了 7 天编写这个库。写库的过程，让我深刻体会到造轮子和驾驶的区别，也让我有了飞速的进步。我希望用连载系列文章的形式帮助大家从驾驶者转换到创造者，拥有「编程思考」。
 
-## 前置条件
+### 前置条件
 
 WebSocket 是一种在单个 TCP 连接上进行全双工通信的协议，它的出现使客户端和服务器之间的数据交换变得更加简单。下图描述了双端交互的流程:
 
@@ -102,11 +102,11 @@ WebSocket 通常被应用在实时性要求较高的场景，例如赛事数据�
 
 至于其它的，现用现学吧！
 
-# Python 网络通信之 Streams
+## Python 网络通信之 Streams
 
 WebSocket，也可以理解为在 WEB 应用中使用的 Socket，这意味着本篇将会涉及到 Socket 编程。上面提到，Python 中与 Socket 相关的有 socket、Streams、Transports and Protocols。其中 socket 是同步的，而另外两个是异步的，这俩属于你常听到的 asyncio。
 
-## Socket 通信过程
+### Socket 通信过程
 
 Socket 是端到端的通信，所以我们要搞清楚消息是怎么从一台机器发送到另一台机器的，这很重要。假设通信的两台机器为 Client 和 Server，Client 向 Server 发送消息的过程如下图所示：
 
@@ -124,7 +124,7 @@ Socket 是端到端的通信，所以我们要搞清楚消息是怎么从一台�
 
 我尝试寻找通信过程中每个步骤的依据（尤其是 send buffer to NIC to recv buffer），（我翻阅了 TCP 的 RFC 和 Kernel.org）但遗憾的是并未找到有力的证明（一定是我太菜了），如果有朋友知道，可以评论告诉我或发邮件 zenrusts@sina.com 告诉我，我可以扩展出另一篇文章。
 
-## 创建 Streams
+### 创建 Streams
 
 那么问题来了：在 Python 中，我们如何实现端到端的消息发送呢？
 
@@ -232,7 +232,7 @@ Close the connection
 
 由于无法直接跟进 CPython 源代码，所以我们无法得到确切的结果。但我们可以跟进 Python 代码，得知消息最后传输到 `transport.write()` ，如果你想知道更多，可以去看 Transports and Protocols 的介绍。你可以将这个过程抽象为上图的 Client to  send buffer to NIC to recv buffer to Server。
 
-# 功能模块设计
+## 功能模块设计
 
 通过上面的学习，现在你已经掌握了 WebSocket 协议规范和 Python Streams 的基本用法，接下来就可以设计一个 WebSocket 客户端库了。
 
@@ -251,7 +251,7 @@ Close the connection
 由于实战编码篇幅太长，我决定放到下一期，这期的内容，读者们可能需要花费一些时间吸收。
 
 
-# 小结
+## 小结
 
 开篇我强调了「创造能力」有多么重要，甚至抛出了一些不是很贴切的例子，但我就是想告诉你，不要做调参🐶。
 

@@ -7,11 +7,13 @@ tags:
 - Android
 ---
 
-#### so 文件调用
+## so 文件调用
 
 随着 Android 移动安全的高速发展，不管是为了执行效率还是程序的安全性等，关键代码下沉 native 层已成为基本操作。
 native 层的开发就是通指的 JNI/NDK 开发，通过 JNI 可以实现 java 层和 native 层（主要是 C/C++ ）的相互调用，native 层经编译后产生 so 动态链接库，so 文件具有可移植性广，执行效率高，保密性强等优点。
 那么问题来了，如何调用 so 文件显得异常重要，当然你也可以直接分析 so 文件的伪代码，利用强悍的编程功底直接模拟关键操作，但是我想对于普通人来说头发还是比较重要的。  
+<!-- more -->
+
 当前调用 so 文件的主流操作应该是：  
 1，基于 Unicorn 的各种实现（还在学习中，暂且不表）  
 2，Android 服务器的搭建，在 App 内起 http 服务完成调用 so 的需求（当然前提是过了 so 的效验等操作）
@@ -19,7 +21,7 @@ native 层的开发就是通指的 JNI/NDK 开发，通过 JNI 可以实现 java
 为什么结合 Service，在学习 Android 开发的时候了解到了 Service 的生命周期，个人理解用 Service 去创建 Http 服务比较好。  
 当然也有 Application 的简单使用，因为在正式环境中，大多数 so 文件的逻辑中都有 context 的一些包名了，签名了的效验等，自定义 Application 的话获取 context 传参就好了。
 
-#### libyemu.so 简介
+## libyemu.so 简介
 
 这是我编译好的一个 so 文件，就是根据入参做下简单的字符串拼接（以下是 native 层编译前的 c 代码）
 ```
@@ -54,7 +56,8 @@ public class NdkTest {
 ```
 如果到这里有点懵逼的同学可能需要去补下 Android 开发基础了
 
-#### Android 项目测试 so
+## Android 项目测试 so
+
 先说下我的环境，因为这个环境影响太大了  
 1，AndroidStudio 3.4  
 2，手机 Android 6 架构 armeabi-v7a  
@@ -75,7 +78,8 @@ public class NdkTest {
 ![](http://pxx0jx04s.bkt.clouddn.com/FlZPSXoC-nljUM-57UYm7IBh78F8)
 可以看到咱们的 so 文件调用成功（这里咱们的 so 没有效验，只是测试 app 是否可以正常调用）
 
-#### AndServer 代码编写
+## AndServer 代码编写
+
 AndServer 官方文档：[https://yanzhenjie.com/AndServer/](https://yanzhenjie.com/AndServer/)  
 打开官方文档，看看人家的入门介绍，新建 java 文件  
 ![](http://pxx0jx04s.bkt.clouddn.com/FpwqVRWawPLsdE4BkB4vk51YeEfj)
@@ -107,7 +111,8 @@ public class MyApp extends Application {
 ![](http://pxx0jx04s.bkt.clouddn.com/Flpyzen_6rJH_YOM86WS6-57AE2L)
 新版本的 AndServer.serverBuilder 已经需要传递 context 了，这里把网络地址和端口号也修改为从构造参数中获取，到这里 AndServer 的东西基本完了，实际上咱们就搭建一个调 so 的接口，并没有过多的业务逻辑，所以代码就是使用的最简单的
 
-#### Service 代码编写
+## Service 代码编写
+
 咱们这里用按钮的点击事件启动 Service，故在 activity_main.xml 中添加一个 button 并指定点击事件  
 ![](http://pxx0jx04s.bkt.clouddn.com/Fh7PsV-Ha67UumUhNt_7HfoziS0G)
 ![](http://pxx0jx04s.bkt.clouddn.com/FiB44r5XTQIKOZ4wbNtAUaql_PpL)
@@ -163,7 +168,8 @@ public class MyService extends Service {
 最后注意检查下 manifest 文件中 Service 的声明  
 ![](http://pxx0jx04s.bkt.clouddn.com/FrxfrVW-TP5EGegkMIlpKNiiTyqI)
 
-#### 开启 Service，并获取本机 ip
+## 开启 Service，并获取本机 ip
+
 回到我们的 MainActivity.java 的 operate（ button 的点击事件）编写启动 Service 代码
 ```
     public void operate(View view) {
@@ -255,7 +261,9 @@ public class NetUtils {
 把工具类 copy 到我们的 Android 项目中，继续在 MainActivity.java 中编码  
 ![](http://pxx0jx04s.bkt.clouddn.com/FgJn1_mmO3xfu8bC4tdiM-uUHM-w)
 获取了一下本机地址和 Android SDK 版本（ Android 8 之后启动 Service 方式不一样）
-#### 申请权限，启动 App
+
+
+## 申请权限，启动 App
 最后一步就是为 app 申请网络权限了  
 ![](http://pxx0jx04s.bkt.clouddn.com/FsWGhs2q4d-zwYjEZJXYIc8LJor9)
 随后连接我们的手机，运行项目，测试一下，点击开启服务  
