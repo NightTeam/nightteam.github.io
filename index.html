@@ -20,6 +20,7 @@
 
 <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
 <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 
 <script id="hexo-configurations">
@@ -33,8 +34,8 @@
     copycode: {"enable":true,"show_result":true,"style":"mac"},
     back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
     bookmark: {"enable":false,"color":"#222","save":"auto"},
-    fancybox: false,
-    mediumzoom: false,
+    fancybox: true,
+    mediumzoom: true,
     lazyload: false,
     pangu: true,
     algolia: {
@@ -44,8 +45,8 @@
       hits: {"per_page":10},
       labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
     },
-    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
-    path: '',
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
     motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
     translation: {
       copy_button: '复制',
@@ -159,11 +160,11 @@
       
       
         
-        <li class="menu-item menu-item-about">
+        <li class="menu-item menu-item-archives">
       
     
 
-    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
 
   </li>
       
@@ -192,16 +193,54 @@
       
       
         
-        <li class="menu-item menu-item-archives">
+        <li class="menu-item menu-item-about">
       
     
 
-    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
 
   </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-sitemap">
+      
+    
+
+    <a href="/atom.xml" rel="section"><i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br>地图</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a href="javascript:;" class="popup-trigger">
+        
+          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+      </li>
+    
   </ul>
 
 </nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
 </div>
     </header>
 
@@ -257,7 +296,7 @@
                 
               
 
-              <time title="创建时间：2019-09-22 00:23:08 / 修改时间：00:45:58" itemprop="dateCreated datePublished" datetime="2019-09-22T00:23:08+08:00">2019-09-22</time>
+              <time title="创建时间：2019-09-22 00:23:08 / 修改时间：01:36:20" itemprop="dateCreated datePublished" datetime="2019-09-22T00:23:08+08:00">2019-09-22</time>
             </span>
           
             
@@ -289,21 +328,16 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h4 id="so-文件调用"><a href="#so-文件调用" class="headerlink" title="so 文件调用"></a>so 文件调用</h4><p>随着 Android 移动安全的高速发展，不管是为了执行效率还是程序的安全性等，关键代码下沉 native 层已成为基本操作。<br>native 层的开发就是通指的 JNI/NDK 开发，通过 JNI 可以实现 java 层和 native 层（主要是 C/C++ ）的相互调用，native 层经编译后产生 so 动态链接库，so 文件具有可移植性广，执行效率高，保密性强等优点。<br>那么问题来了，如何调用 so 文件显得异常重要，当然你也可以直接分析 so 文件的伪代码，利用强悍的编程功底直接模拟关键操作，但是我想对于普通人来说头发还是比较重要的。<br>当前调用 so 文件的主流操作应该是：<br>1，基于 Unicorn 的各种实现（还在学习中，暂且不表）<br>2，Android 服务器的搭建，在 App 内起 http 服务完成调用 so 的需求（当然前提是过了 so 的效验等操作）<br>至于为什么选用 AndServer，好吧，不为什么，只是因为搜索到了它<br>为什么结合 Service，在学习 Android 开发的时候了解到了 Service 的生命周期，个人理解用 Service 去创建 Http 服务比较好。<br>当然也有 Application 的简单使用，因为在正式环境中，大多数 so 文件的逻辑中都有 context 的一些包名了，签名了的效验等，自定义 Application 的话获取 context 传参就好了。</p>
-<h4 id="libyemu-so-简介"><a href="#libyemu-so-简介" class="headerlink" title="libyemu.so 简介"></a>libyemu.so 简介</h4><p>这是我编译好的一个 so 文件，就是根据入参做下简单的字符串拼接（以下是 native 层编译前的 c 代码）<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">extern &quot;C&quot;</span><br><span class="line">JNIEXPORT jstring JNICALL</span><br><span class="line">Java_com_fw_myapplication_ndktest_NdkTest_stringFromUTF(JNIEnv *env, jobject instance, jstring str_) &#123;</span><br><span class="line">    jclass String_clazz = env-&gt;FindClass(&quot;java/lang/String&quot;);</span><br><span class="line"></span><br><span class="line">    jmethodID concat_methodID = env-&gt;GetMethodID(String_clazz, &quot;concat&quot;, &quot;(Ljava/lang/String;)Ljava/lang/String;&quot;);</span><br><span class="line"></span><br><span class="line">    jstring str = env-&gt;NewStringUTF(&quot;  from so --[NightTeam夜幕]&quot;);</span><br><span class="line"></span><br><span class="line">    jobject str1 = env-&gt;CallObjectMethod(str_, concat_methodID, str);</span><br><span class="line"></span><br><span class="line">    const char *chars = env-&gt;GetStringUTFChars((jstring)str1, 0);</span><br><span class="line"></span><br><span class="line">    return env-&gt;NewStringUTF(chars);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>这部分代码还是有必要贴一下的，简单的静态注册使用了反射的思想，反射在逆向中至关重要<br>接下来是 java 代码，定义了 native 函数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">package com.fw.myapplication.ndktest;</span><br><span class="line"></span><br><span class="line">public class NdkTest &#123;</span><br><span class="line">    public static native String stringFromUTF(String str);</span><br><span class="line"></span><br><span class="line">    static &#123;</span><br><span class="line">        System.loadLibrary(&quot;yemu&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>如果到这里有点懵逼的同学可能需要去补下 Android 开发基础了</p>
-<h4 id="Android-项目测试-so"><a href="#Android-项目测试-so" class="headerlink" title="Android 项目测试 so"></a>Android 项目测试 so</h4><p>先说下我的环境，因为这个环境影响太大了<br>1，AndroidStudio 3.4<br>2，手机 Android 6 架构 armeabi-v7a<br>打开 AndroidStudio 新建 project<br><img src="http://pxx0jx04s.bkt.clouddn.com/FnI6Y8rCEUPsGF-Crl6fHbS1Jj7O" alt><br>在 module 的 build 中加这么一句，然后 sync<br><img src="http://pxx0jx04s.bkt.clouddn.com/Fgsl4Zg7LocRkHREXLpBUaJDKsDB" alt><br>把编译好的 so 文件复制到 libs 文件夹下（和刚才的 jniLibs.srcDirs 对应）<br><img src="http://pxx0jx04s.bkt.clouddn.com/FjUP5ssOtJSkb-Qas0liRT9yseIG" alt><br>把 so 对应的 java 代码也 copy 过来，注意包名类名的一致性<br><img src="http://pxx0jx04s.bkt.clouddn.com/FqHDAvfRfENxubUUG16galS4NPX8" alt><br>打开 activity_main.xml 文件为 TextView 添加 id<br><img src="http://pxx0jx04s.bkt.clouddn.com/Fv-pvgJ3-5DL7P_0kvWZ6uRFODpJ" alt><br>打开 MainActiviy.java 开始编码<br><img src="http://pxx0jx04s.bkt.clouddn.com/FtMaZriK312NMGuHHfnslHxH-DRq" alt><br>这两行的意思就是，先从布局中找到对应 id 的 TextView，然后为其设置 Text（调用 native 函数的返回值）<br>下面测试一下咱们的 so 调用情况<br><img src="http://pxx0jx04s.bkt.clouddn.com/FlZPSXoC-nljUM-57UYm7IBh78F8" alt><br>可以看到咱们的 so 文件调用成功（这里咱们的 so 没有效验，只是测试 app 是否可以正常调用）</p>
-<h4 id="AndServer-代码编写"><a href="#AndServer-代码编写" class="headerlink" title="AndServer 代码编写"></a>AndServer 代码编写</h4><p>AndServer 官方文档：<a href="https://yanzhenjie.com/AndServer/" target="_blank" rel="noopener">https://yanzhenjie.com/AndServer/</a><br>打开官方文档，看看人家的入门介绍，新建 java 文件<br><img src="http://pxx0jx04s.bkt.clouddn.com/FpwqVRWawPLsdE4BkB4vk51YeEfj" alt><br>如图经典 MVC 的 C 就写好了，定义了一个 nightteam_sign 接口，请求方式为 get，请求参数为 sign，调用 native 函数，然后返回 json，但是这里我想利用 Application 获取下 context 对象，取下包名，接下来自定义 Applictaion<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">package com.nightteam.httpso;</span><br><span class="line"></span><br><span class="line">import android.app.Application;</span><br><span class="line"></span><br><span class="line">public class MyApp extends Application &#123;</span><br><span class="line">    private static MyApp myApp;</span><br><span class="line">    public static MyApp getInstance() &#123;</span><br><span class="line">        return myApp;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void onCreate() &#123;</span><br><span class="line">        super.onCreate();</span><br><span class="line">        myApp = this;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>然后在 manifest 文件中指定要启动的 Application<br><img src="http://pxx0jx04s.bkt.clouddn.com/FoiTsSgJMVTp5IPlTpk899AfjE-v" alt><br>然后修改 MyController.java 的代码<br><img src="http://pxx0jx04s.bkt.clouddn.com/FgO0OfbGufmBi__W0HBQ1PqTfo-w" alt><br>接下来把官方文档-服务器的代码 copy 下来<br>导入一些包，修改部分代码如下<br><img src="http://pxx0jx04s.bkt.clouddn.com/Flpyzen_6rJH_YOM86WS6-57AE2L" alt><br>新版本的 AndServer.serverBuilder 已经需要传递 context 了，这里把网络地址和端口号也修改为从构造参数中获取，到这里 AndServer 的东西基本完了，实际上咱们就搭建一个调 so 的接口，并没有过多的业务逻辑，所以代码就是使用的最简单的</p>
-<h4 id="Service-代码编写"><a href="#Service-代码编写" class="headerlink" title="Service 代码编写"></a>Service 代码编写</h4><p>咱们这里用按钮的点击事件启动 Service，故在 activity_main.xml 中添加一个 button 并指定点击事件<br><img src="http://pxx0jx04s.bkt.clouddn.com/Fh7PsV-Ha67UumUhNt_7HfoziS0G" alt><br><img src="http://pxx0jx04s.bkt.clouddn.com/FiB44r5XTQIKOZ4wbNtAUaql_PpL" alt><br>接下来编写自定义 Service 代码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">package com.nightteam.httpso.Service;</span><br><span class="line"></span><br><span class="line">import android.app.Service;</span><br><span class="line">import android.content.Intent;</span><br><span class="line">import android.os.IBinder;</span><br><span class="line">import android.util.Log;</span><br><span class="line"></span><br><span class="line">import com.nightteam.httpso.ServerManager;</span><br><span class="line"></span><br><span class="line">import java.net.InetAddress;</span><br><span class="line">import java.net.UnknownHostException;</span><br><span class="line"></span><br><span class="line">public class MyService extends Service &#123;</span><br><span class="line">    private static final String TAG = &quot;NigthTeam&quot;;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void onCreate() &#123;</span><br><span class="line">        super.onCreate();</span><br><span class="line">        Log.d(TAG, &quot;onCreate: MyService&quot;);</span><br><span class="line">        new Thread() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void run() &#123;</span><br><span class="line">                super.run();</span><br><span class="line">                InetAddress inetAddress = null;</span><br><span class="line">                try &#123;</span><br><span class="line">                    inetAddress = InetAddress.getByName(&quot;0.0.0.0&quot;);</span><br><span class="line">                    Log.d(TAG, &quot;onCreate: &quot; + inetAddress.getHostAddress());</span><br><span class="line">                    ServerManager serverManager = new ServerManager(getApplicationContext(), inetAddress, 8005);</span><br><span class="line">                    serverManager.startServer();</span><br><span class="line">                &#125; catch (UnknownHostException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;.start();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public IBinder onBind(Intent intent) &#123;</span><br><span class="line">        return null;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>打上了几个 log，在子线程中启动 AndServer 的服务（何时使用 UI 线程和子线程是 Android 基础，这里就不赘述了）<br>注意一下，这里从 0.0.0.0 获取 inetAddress，可不要写错了，localhost 和 0.0.0.0 的区别请移步搜索引擎<br>然后就是向 ServerManager 的构造函数传递 context，inetAddress，port 用来 new 对象，随后开启服务<br>最后注意检查下 manifest 文件中 Service 的声明<br><img src="http://pxx0jx04s.bkt.clouddn.com/FrxfrVW-TP5EGegkMIlpKNiiTyqI" alt></p>
-<h4 id="开启-Service，并获取本机-ip"><a href="#开启-Service，并获取本机-ip" class="headerlink" title="开启 Service，并获取本机 ip"></a>开启 Service，并获取本机 ip</h4><p>回到我们的 MainActivity.java 的 operate（ button 的点击事件）编写启动 Service 代码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public void operate(View view) &#123;</span><br><span class="line">    switch (view.getId())&#123;</span><br><span class="line">        case R.id.id_bt_index:</span><br><span class="line">            //启动服务:创建--&gt;启动--&gt;销毁</span><br><span class="line">            //如果服务已经创建了，后续重复启动，操作的都是同一个服务，不会再重新创建了，除非你先销毁它</span><br><span class="line">            Intent it1 = new Intent(this, MyService.class);</span><br><span class="line">            Log.d(TAG, &quot;operate: button&quot;);</span><br><span class="line">            startService(it1);</span><br><span class="line">            ((Button) view).setText(&quot;服务已开启&quot;);</span><br><span class="line">            break;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>到这里我们的服务基本搭建好了，但是为了方便起见，我想把咱们的本机 ip 显示在 App 上，这样我们就不用去设置再查看了<br>我在网上找到了一个获取 ip 地址的一个工具类，源码如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line">package com.nightteam.httpso;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">import java.net.InetAddress;</span><br><span class="line">import java.net.NetworkInterface;</span><br><span class="line">import java.net.SocketException;</span><br><span class="line">import java.util.Enumeration;</span><br><span class="line">import java.util.regex.Pattern;</span><br><span class="line"></span><br><span class="line">public class NetUtils &#123;</span><br><span class="line"></span><br><span class="line">    private static final Pattern IPV4_PATTERN = Pattern.compile(&quot;^(&quot; +</span><br><span class="line"></span><br><span class="line">            &quot;([0-9]|[1-9][0-9]|1[0-9]&#123;2&#125;|2[0-4][0-9]|25[0-5])\\.)&#123;3&#125;&quot; +</span><br><span class="line"></span><br><span class="line">            &quot;([0-9]|[1-9][0-9]|1[0-9]&#123;2&#125;|2[0-4][0-9]|25[0-5])$&quot;);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    private static boolean isIPv4Address(String input) &#123;</span><br><span class="line"></span><br><span class="line">        return IPV4_PATTERN.matcher(input).matches();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //获取本机IP地址</span><br><span class="line"></span><br><span class="line">    public static InetAddress getLocalIPAddress() &#123;</span><br><span class="line"></span><br><span class="line">        Enumeration&lt;NetworkInterface&gt; enumeration = null;</span><br><span class="line"></span><br><span class="line">        try &#123;</span><br><span class="line"></span><br><span class="line">            enumeration = NetworkInterface.getNetworkInterfaces();</span><br><span class="line"></span><br><span class="line">        &#125; catch (SocketException e) &#123;</span><br><span class="line"></span><br><span class="line">            e.printStackTrace();</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if (enumeration != null) &#123;</span><br><span class="line"></span><br><span class="line">            while (enumeration.hasMoreElements()) &#123;</span><br><span class="line"></span><br><span class="line">                NetworkInterface nif = enumeration.nextElement();</span><br><span class="line"></span><br><span class="line">                Enumeration&lt;InetAddress&gt; inetAddresses = nif.getInetAddresses();</span><br><span class="line"></span><br><span class="line">                if (inetAddresses != null)</span><br><span class="line"></span><br><span class="line">                    while (inetAddresses.hasMoreElements()) &#123;</span><br><span class="line"></span><br><span class="line">                        InetAddress inetAddress = inetAddresses.nextElement();</span><br><span class="line"></span><br><span class="line">                        if (!inetAddress.isLoopbackAddress() &amp;&amp; isIPv4Address(inetAddress.getHostAddress())) &#123;</span><br><span class="line"></span><br><span class="line">                            return inetAddress;</span><br><span class="line"></span><br><span class="line">                        &#125;</span><br><span class="line"></span><br><span class="line">                    &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        return null;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>把工具类 copy 到我们的 Android 项目中，继续在 MainActivity.java 中编码<br><img src="http://pxx0jx04s.bkt.clouddn.com/FgJn1_mmO3xfu8bC4tdiM-uUHM-w" alt><br>获取了一下本机地址和 Android SDK 版本（ Android 8 之后启动 Service 方式不一样）</p>
-<h4 id="申请权限，启动-App"><a href="#申请权限，启动-App" class="headerlink" title="申请权限，启动 App"></a>申请权限，启动 App</h4><p>最后一步就是为 app 申请网络权限了<br><img src="http://pxx0jx04s.bkt.clouddn.com/FsWGhs2q4d-zwYjEZJXYIc8LJor9" alt><br>随后连接我们的手机，运行项目，测试一下，点击开启服务<br><img src="http://pxx0jx04s.bkt.clouddn.com/Fkon0mUBUUpqbbsDaQPvdc_xb2aE" alt><br>看下 AndroidStudio 日志<br><img src="http://pxx0jx04s.bkt.clouddn.com/Fl17ks9HRNRDTi-FeHAHz9GRNFXF" alt><br>好像一切正常，在浏览器访问下试试（ ip 就是 App 中显示的 ip 地址）<br><img src="http://pxx0jx04s.bkt.clouddn.com/FolDpPh19DiCx3b5eKxT8EHCTZVs" alt><br>如图正常访问到了我们想要的内容<br>回过头来说下 Service，打开我们手机的设置，找到应用程序管理-运行中的服务（手机不同，方式不同）<br><img src="http://pxx0jx04s.bkt.clouddn.com/FuKPa8wpqZ41LMC8vmCS3QTol2GN" alt><br>可以看到我们的程序，运行了一个服务，这个服务就是咱们编码的 MyService<br><img src="http://pxx0jx04s.bkt.clouddn.com/Fp461KQ3wzQ_WYMW0XTO1i4bGebI" alt><br>接下来杀掉该 App进程，再次查看运行中的服务<br><img src="http://pxx0jx04s.bkt.clouddn.com/Ft3ZLJIdLXcfd-zwp4K3zVfTXta9" alt><br>我这里在权限管理设置了自动运行，可以保持服务的运行。（这个地方还是根据系统有大小差异）<br>至此使用 App 起 http 服务调 so 就完成了</p>
-<p>好了，上面就是利用 AndServer 打造 Android 服务器调 so 文件的整体思路和流程，如果你懒得看的话，直接用我写好的 App 修修补补也是可以的，只需要发送消息【AndServer搭建Web服务调so】到公众号【NightTeam】即可。</p>
-
+          <h2 id="so-文件调用"><a href="#so-文件调用" class="headerlink" title="so 文件调用"></a>so 文件调用</h2><p>随着 Android 移动安全的高速发展，不管是为了执行效率还是程序的安全性等，关键代码下沉 native 层已成为基本操作。<br>native 层的开发就是通指的 JNI/NDK 开发，通过 JNI 可以实现 java 层和 native 层（主要是 C/C++ ）的相互调用，native 层经编译后产生 so 动态链接库，so 文件具有可移植性广，执行效率高，保密性强等优点。<br>那么问题来了，如何调用 so 文件显得异常重要，当然你也可以直接分析 so 文件的伪代码，利用强悍的编程功底直接模拟关键操作，但是我想对于普通人来说头发还是比较重要的。<br>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2019/09/22/AndServer+Service打造Android服务器实现so文件调用/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
         
       
     </div>
@@ -367,7 +401,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2019-09-22 00:24:45" itemprop="dateModified" datetime="2019-09-22T00:24:45+08:00">2019-09-22</time>
+                <time title="修改时间：2019-09-22 01:35:15" itemprop="dateModified" datetime="2019-09-22T01:35:15+08:00">2019-09-22</time>
               </span>
             
           
@@ -396,115 +430,16 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>这是系列文章的第一篇，也是非常重要的一篇，希望大家能读懂我想要表达的意思。</p>
-<h1 id="系列文章开篇概述"><a href="#系列文章开篇概述" class="headerlink" title="系列文章开篇概述"></a>系列文章开篇概述</h1><p>相对于其他编程语言来说，Python 生态中最突出的就是第三方库。任何一个及格的 Python 开发者都使用过至少 5 款第三方库。</p>
-<p>就爬虫领域而言，必将用到的例如网络请求库 Requests、网页解析库 Parsel 或 BeautifulSoup、数据库对象关系映射  Motor 或 SQLAlchemy、定时任务 Apscheduler、爬虫框架 Scrapy 等。</p>
-<p><img src="https://user-gold-cdn.xitu.io/2019/9/14/16d2dd8be3d2254d?w=1376&amp;h=910&amp;f=png&amp;s=1290872" alt></p>
-<p>这些开源库的使用方法想必大家已经非常熟练了，甚至还修炼出了自己的一套技巧，日常工作中敲起键盘肯定也是哒哒哒的响。</p>
-<p>但是你有没有想过：</p>
-<ul>
-<li>那个神奇的功能是如何实现的？</li>
-<li>这个功能背后的逻辑是什么？</li>
-<li>为什么要这样做而不是选择另一种写法？</li>
-<li>编写这样的库需要用到哪些知识？</li>
-<li>这个论点是否有明确的依据？</li>
-</ul>
-<p><img src="https://user-gold-cdn.xitu.io/2019/9/14/16d2dda24b0853ed?w=312&amp;h=312&amp;f=png&amp;s=127644" alt><br>如果你从未这样想过，那说明你还没到达应该「渡劫」的时机；如果你曾提出过 3 个以上的疑问，那说明你即将到达那个重要的关口；如果你常常这么想，而且也尝试着寻找对应的答案，那么恭喜你，你现在正处于「渡劫」的关口之上。</p>
-<p><img src="https://user-gold-cdn.xitu.io/2019/9/14/16d2de0cdaef77c5?w=538&amp;h=282&amp;f=png&amp;s=104780" alt><br>偶有群友会抛出这样的问题：初级工程师、中级工程师、高级工程师如何界定？</p>
-<p>这个问题有两种不同的观点，第一个是看工作职级，第二个则是看个人能力。工作职级是一个浮动很大的参照物，例如阿里巴巴的高级研发和我司的高级研发，职级名称都是「高级研发」，但能力可能会有很大的差距。</p>
-<p>个人能力又如何评定呢？</p>
-<p>难不成看代码写的快还是写的慢吗？</p>
-<p>当然不是！</p>
-<p>个人能力应当从广度和深度两个方面进行考量，这并没有一个明确的标准。当两人能力差异很大的时候，外人可以轻松的分辨孰强孰弱。</p>
-<p>自己怎样分辨个人能力的进与退呢？</p>
-<p>这就回到了上面提到的那些问题：WHO WHAT WHERE WHY WHEN HOW？</p>
-<p>我想通过这篇文章告诉你，不要做那个用库用得很熟练的人，要做那个创造库的人。计算机世界如此吸引人，就是因为我们可以在这个世界里尽情创造。</p>
-<p>你想做一个创造者吗？</p>
-<p>如果不想，那现在你就可以关掉浏览器窗口，回到 Hub 的世界里。</p>
-<h1 id="内容介绍"><a href="#内容介绍" class="headerlink" title="内容介绍"></a>内容介绍</h1><p>这是一套系列文章，这个系列将为大家解读常见库（例如 WebSocket、HTTP、ASCII、Base64、MD5、AES、RSA）的协议规范和对应的代码实现，帮助大家「知其然，知其所以然」。</p>
-<h2 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h2><p>这次我们要学习的是 WebSocket 协议规范和代码实现，也可以理解为从 0 开始编写 <a href="https://github.com/asyncins/aiowebsocket" target="_blank" rel="noopener">aiowebsocket</a> 库。至于为什么选择它，那大概是因为全世界没有比我更熟悉的它的人了。</p>
-<p><img src="https://user-gold-cdn.xitu.io/2019/9/14/16d2de2d6c55bdcd?w=900&amp;h=383&amp;f=png&amp;s=222353" alt></p>
-<p>我是 aiowebsocket 库的作者，我花了 7 天编写这个库。写库的过程，让我深刻体会到造轮子和驾驶的区别，也让我有了飞速的进步。我希望用连载系列文章的形式帮助大家从驾驶者转换到创造者，拥有「编程思考」。</p>
-<h2 id="前置条件"><a href="#前置条件" class="headerlink" title="前置条件"></a>前置条件</h2><p>WebSocket 是一种在单个 TCP 连接上进行全双工通信的协议，它的出现使客户端和服务器之间的数据交换变得更加简单。下图描述了双端交互的流程:</p>
-<p><img src="https://user-gold-cdn.xitu.io/2019/9/14/16d2de4a2f5a3b5d?w=978&amp;h=600&amp;f=png&amp;s=74626" alt></p>
-<p>WebSocket 通常被应用在实时性要求较高的场景，例如赛事数据、股票证券、网页聊天和在线绘图等。WebSocket 与 HTTP 协议完全不同，但同样被广泛应用。</p>
-<p>无论是后端开发者、前端开发者、爬虫工程师或者信息安全工作者，都应该掌握 WebSocket 协议的知识。</p>
-<p>我曾经发表过几篇关于 WebSocket 的文章：</p>
-<ul>
-<li><a href="https://juejin.im/post/5d4cbc0cf265da038f47fa37" target="_blank" rel="noopener">【严选-高质量文章】开发者必知必会的 WebSocket 协议</a></li>
-<li><a href="https://juejin.im/post/5c80b768f265da2dae514d4f" target="_blank" rel="noopener">Python如何爬取实时变化的WebSocket数据</a></li>
-<li><a href="https://juejin.im/post/5c7cdaabf265da2daf79c15f" target="_blank" rel="noopener">WebSocket 从入门到写出开源库</a></li>
-</ul>
-<p>其中，《【严选-高质量文章】开发者必知必会的 WebSocket 协议》介绍了协议规范的相关知识。这篇文章的内容大体如下：</p>
-<ul>
-<li>WebSocket 协议来源</li>
-<li>WebSocket 协议的优点</li>
-<li>WebSocket 协议规范</li>
-<li>一些实际代码演示</li>
-</ul>
-<p>如果没有掌握 WebSocket 协议的朋友，我建议先去阅读这篇文章，尤其是对 <a href="https://juejin.im/post/5d4cbc0cf265da038f47fa37#heading-4" target="_blank" rel="noopener">WebSocket 协议规范</a>介绍的那部分。</p>
-<p>要想将协议规范 RFC6455 变成开源库，第一步就是要熟悉整个协议规范，所以你需要阅读<a href="https://juejin.im/post/5d4cbc0cf265da038f47fa37" target="_blank" rel="noopener">【严选-高质量文章】开发者必知必会的 WebSocket 协议</a>。当然，有能力的同学直接阅读 RFC6455 也未尝不可。</p>
-<p>接着还需要了解编程语言中内置库 Socket 的基础用法，例如 Python 中的 <a href="https://docs.python.org/3/library/socket.html?highlight=socket#module-socket" target="_blank" rel="noopener">socket</a> 或者更高级更潮的 <a href="https://docs.python.org/3/library/asyncio-stream.html" target="_blank" rel="noopener">Streams</a>、<a href="https://docs.python.org/3/library/asyncio-protocol.html" target="_blank" rel="noopener">Transports and Protocols</a>。如果你是 Go 开发者、Rust 开发者，请查找对应语言的内置库。</p>
-<p>假设你已经熟悉了 RFC6455，你应该知道 Frame 打包和解包的时候需要用到位运算，正好我之前写过位运算相关的文章 <a href="https://gitbook.cn/gitchat/activity/5d4d6d8f6f29256fa317e946" target="_blank" rel="noopener">7分钟全面了解位运算</a>。</p>
-<p>至于其它的，现用现学吧！</p>
-<h1 id="Python-网络通信之-Streams"><a href="#Python-网络通信之-Streams" class="headerlink" title="Python 网络通信之 Streams"></a>Python 网络通信之 Streams</h1><p>WebSocket，也可以理解为在 WEB 应用中使用的 Socket，这意味着本篇将会涉及到 Socket 编程。上面提到，Python 中与 Socket 相关的有 socket、Streams、Transports and Protocols。其中 socket 是同步的，而另外两个是异步的，这俩属于你常听到的 asyncio。</p>
-<h2 id="Socket-通信过程"><a href="#Socket-通信过程" class="headerlink" title="Socket 通信过程"></a>Socket 通信过程</h2><p>Socket 是端到端的通信，所以我们要搞清楚消息是怎么从一台机器发送到另一台机器的，这很重要。假设通信的两台机器为 Client 和 Server，Client 向 Server 发送消息的过程如下图所示：</p>
-<p><img src="https://user-gold-cdn.xitu.io/2019/9/14/16d2b6eccf4d7221?w=1240&amp;h=672&amp;f=jpeg&amp;s=44507" alt></p>
-<blockquote>
-<p>Client 通过文件描述符的读写 API  read &amp; write 来访问操作系统内核中的网络模块为当前套接字分配的发送  send buffer 和接收 recv buffer 缓存。</p>
-<p>Client 进程写消息到内核的发送缓存中，内核将发送缓存中的数据传送到物理硬件 NIC，也就是网络接口芯片 (Network Interface Circuit)。</p>
-<p>NIC 负责将翻译出来的模拟信号通过网络硬件传递到服务器硬件的 NIC。</p>
-<p>服务器的 NIC 再将模拟信号转成字节数据存放到内核为套接字分配的接收缓存中，最终服务器进程从接收缓存中读取数据即为源客户端进程传递过来的 消息。</p>
-</blockquote>
-<p>上述通信过程的描述和图片均出自钱文品的深入理解 RPC 交互流程。</p>
-<p>我尝试寻找通信过程中每个步骤的依据（尤其是 send buffer to NIC to recv buffer），（我翻阅了 TCP 的 RFC 和 Kernel.org）但遗憾的是并未找到有力的证明（一定是我太菜了），如果有朋友知道，可以评论告诉我或发邮件 zenrusts@sina.com 告诉我，我可以扩展出另一篇文章。</p>
-<h2 id="创建-Streams"><a href="#创建-Streams" class="headerlink" title="创建 Streams"></a>创建 Streams</h2><p>那么问题来了：在 Python 中，我们如何实现端到端的消息发送呢？</p>
-<p>答：Python 提供了一些对象帮助我们实现这个需求，其中相对简单易用的是 Streams。</p>
-<p>Streams 是 Python Asynchronous I/O 中提供的 High-level APIs。Python 官方文档对 Streams 的介绍如下：</p>
-<blockquote>
-<p>Streams are high-level async/await-ready primitives to work with network connections. Streams allow sending and receiving data without using callbacks or low-level protocols and transports.</p>
-</blockquote>
-<p>我尬译一下：Streams 是用于网络连接的 high-level async/await-ready 原语。Streams 允许在不使用回调或 low-level protocols and transports 的情况下发送和接收数据。</p>
-<p>Python 提供了 <code>asyncio.open_connection()</code> 让开发者创建 Streams，<code>asyncio.open_connection()</code> 将建立网络连接并返回 reader 和 writer 对象，这两个对象其实是 StreamReader 和 StreamWriter 类的实例。</p>
-<p>开发者可以通过 StreamReader 从 IO 流中读取数据，通过 StreamWriter 将数据写入 IO 流。虽然文档并没有给出 IO 流的明确定义，但我猜它跟 buffer （也就是 send buffer to NIC to recv buffer 中的 buffer）有关，你也可以抽象的认为它就是 buffer。</p>
-<p>有了 Streams，就有了端到端消息发送的完整实现。下面将通过一个例子来熟悉 Streams 的用法和用途。这是 Python 官方文档给出的双端示例，首先是 Server 端：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"># TCP echo server using streams</span><br><span class="line"># 本文出自「夜幕团队 NightTeam」 转载请联系并取得授权</span><br><span class="line">import asyncio</span><br><span class="line"></span><br><span class="line">async def handle_echo(reader, writer):</span><br><span class="line">    data = await reader.read(100)</span><br><span class="line">    message = data.decode()</span><br><span class="line">    addr = writer.get_extra_info(&apos;peername&apos;)</span><br><span class="line"></span><br><span class="line">    print(f&quot;Received &#123;message!r&#125; from &#123;addr!r&#125;&quot;)</span><br><span class="line"></span><br><span class="line">    print(f&quot;Send: &#123;message!r&#125;&quot;)</span><br><span class="line">    writer.write(data)</span><br><span class="line">    await writer.drain()</span><br><span class="line"></span><br><span class="line">    print(&quot;Close the connection&quot;)</span><br><span class="line">    writer.close()</span><br><span class="line"></span><br><span class="line">async def main():</span><br><span class="line">    server = await asyncio.start_server(</span><br><span class="line">        handle_echo, &apos;127.0.0.1&apos;, 8888)</span><br><span class="line"></span><br><span class="line">    addr = server.sockets[0].getsockname()</span><br><span class="line">    print(f&apos;Serving on &#123;addr&#125;&apos;)</span><br><span class="line"></span><br><span class="line">    async with server:</span><br><span class="line">        await server.serve_forever()</span><br><span class="line"></span><br><span class="line">asyncio.run(main())</span><br></pre></td></tr></table></figure>
-<p>接着是 Client 端：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"># TCP echo client using streams</span><br><span class="line"># 本文出自「夜幕团队 NightTeam」 转载请联系并取得授权</span><br><span class="line">import asyncio</span><br><span class="line"></span><br><span class="line">async def tcp_echo_client(message):</span><br><span class="line">    reader, writer = await asyncio.open_connection(</span><br><span class="line">        &apos;127.0.0.1&apos;, 8888)</span><br><span class="line"></span><br><span class="line">    print(f&apos;Send: &#123;message!r&#125;&apos;)</span><br><span class="line">    writer.write(message.encode())</span><br><span class="line"></span><br><span class="line">    data = await reader.read(100)</span><br><span class="line">    print(f&apos;Received: &#123;data.decode()!r&#125;&apos;)</span><br><span class="line"></span><br><span class="line">    print(&apos;Close the connection&apos;)</span><br><span class="line">    writer.close()</span><br><span class="line"></span><br><span class="line">asyncio.run(tcp_echo_client(&apos;Hello World!&apos;))</span><br></pre></td></tr></table></figure>
-<p>将示例分别写入到 server.py 和 client.py 中，然后按序运行。此时 server.py 的窗口会输出如下内容：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Serving on (&apos;127.0.0.1&apos;, 8888)</span><br><span class="line">Received &apos;Hello World!&apos; from (&apos;127.0.0.1&apos;, 59534)</span><br><span class="line">Send: &apos;Hello World!&apos;</span><br><span class="line">Close the connection</span><br></pre></td></tr></table></figure>
-<p>从输出中得知，服务启动的 address 和 port 为 <code>(&#39;127.0.0.1&#39;, 8888)</code>，从 <code>(&#39;127.0.0.1&#39;, 59534)</code> 读取到内容为 <code>Hello World!</code> 的消息，接着将 <code>Hello World!</code> 返回给  <code>(&#39;127.0.0.1&#39;, 59534)</code> ，最后关闭连接。</p>
-<p>client.py 的窗口输出内容如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Send: &apos;Hello World!&apos;</span><br><span class="line">Received: &apos;Hello World!&apos;</span><br><span class="line">Close the connection</span><br></pre></td></tr></table></figure>
-<p>在创建连接后，Client 向指定的端发送了内容为 <code>Hello World!</code>  的消息，接着从指定的端接收到内容为  <code>Hello World!</code>  的消息，最后关闭连接。</p>
-<p>有些读者可能不太理解，为什么 Client Send  <code>Hello World!</code> ，而 Server 接收到之后也向 Client Send  <code>Hello World!</code> 。双端的 Send 和 Received 都是  <code>Hello World!</code> ，这很容易让新手懵逼。实际上这就是一个普通的回显服务器示例，也就是说当 Server 收到消息时，将消息内容原封不动的返回给 Client。</p>
-<p>这样只是为了演示，并无它意，但这样的示例却会给新手带来困扰。</p>
-<p>以上是一个简单的 Socket 编程示例，整体思路理解起来还是很轻松的，接下来我们将逐步解读示例中的代码：</p>
-<pre><code>* client.py 中用 `asyncio.open_connection()` 连接指定的端，并获得 reader 和 writer 这两个对象。
-* 然后使用 writer 对象中的 `write()` 方法将 `Hello World!` 写入到 IO 流中，该消息会被发送到 Server。
-* 接着使用 reader 对象中的 `read()` 方法从 IO 流中读取消息，并将消息打印到终端。
-</code></pre><p>看到这里，你或许会有另一个疑问：<code>write()</code> 只是将消息写入到 IO 流，并没有发送行为，那消息是如何传输到 Server 的呢？</p>
-<p>由于无法直接跟进 CPython 源代码，所以我们无法得到确切的结果。但我们可以跟进 Python 代码，得知消息最后传输到 <code>transport.write()</code> ，如果你想知道更多，可以去看 Transports and Protocols 的介绍。你可以将这个过程抽象为上图的 Client to  send buffer to NIC to recv buffer to Server。</p>
-<h1 id="功能模块设计"><a href="#功能模块设计" class="headerlink" title="功能模块设计"></a>功能模块设计</h1><p>通过上面的学习，现在你已经掌握了 WebSocket 协议规范和 Python Streams 的基本用法，接下来就可以设计一个 WebSocket 客户端库了。</p>
-<p>根据 RFC6455 的约定，WebSocket 之前是 HTTP，通过「握手」来升级协议。协议升级后进入真正的 WebSocket 通信，通信包含发送（Send）和接收（Recv）。文本消息要在传输过程前转换为 Frames，而接受端读取到消息后要将 Frames 转换成文本。当然，期间会有一些异常产生，我们可能需要自定义异常，以快速定位问题所在。现在我们得出了几个模块：</p>
-<pre><code>* 握手 - ShakeHands
-
-* 传输 - Transports
-
-* 帧处理 - Frames
-
-* 异常 - Exceptions
-</code></pre><p>一切准备就绪后，就可以进入真正的编码环节了。</p>
-<p>由于实战编码篇幅太长，我决定放到下一期，这期的内容，读者们可能需要花费一些时间吸收。</p>
-<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>开篇我强调了「创造能力」有多么重要，甚至抛出了一些不是很贴切的例子，但我就是想告诉你，不要做调参🐶。</p>
-<p>然后我告诉你，本篇文章要讲解的是 WebSocket。</p>
-<p>接着又跟你说，要掌握 WebSocket 协议，如果你无法独立啃完 RFC6455，还可以看我写过的几篇关于 WebSocket 文章和位运算文章。</p>
-<p>过了几分钟，给你展示了 Socket 的通信过程，虽然没有强有力的依据，但你可以假设这是对的。</p>
-<p>喝了一杯白开水之后，我向你展示了 Streams 的具体用法并为你解读代码的作用，重要的是将 Streams 与 Socket 通信过程进行了抽象。</p>
-<p>这些前置条件都确定后，我又带着你草草地设计了 WebSocket 客户端的功能模块。</p>
-<p>下一篇文章将进入代码实战环节，请做好环境（Python 3.6+）准备。</p>
-<p>总之，要想越过前面这座山，就请跟我来！</p>
-
+          <p>这是系列文章的第一篇，也是非常重要的一篇，希望大家能读懂我想要表达的意思。</p><h2 id="系列文章开篇概述"><a href="#系列文章开篇概述" class="headerlink" title="系列文章开篇概述"></a>系列文章开篇概述</h2><p>相对于其他编程语言来说，Python 生态中最突出的就是第三方库。任何一个及格的 Python 开发者都使用过至少 5 款第三方库。</p><p>就爬虫领域而言，必将用到的例如网络请求库 Requests、网页解析库 Parsel 或 BeautifulSoup、数据库对象关系映射  Motor 或 SQLAlchemy、定时任务 Apscheduler、爬虫框架 Scrapy 等。</p>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2019/09/21/如何将协议规范变成开源库系列之WebSocket/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
         
       
     </div>
@@ -568,7 +503,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2019-09-22 00:18:19" itemprop="dateModified" datetime="2019-09-22T00:18:19+08:00">2019-09-22</time>
+                <time title="修改时间：2019-09-22 01:33:05" itemprop="dateModified" datetime="2019-09-22T01:33:05+08:00">2019-09-22</time>
               </span>
             
           
@@ -598,131 +533,15 @@
 
       
           <p>大家都知道，现在其实很多爬虫代理都已经并不那么好用了，一些 IP 段被大厂查到，很多大厂的站点可以直接检测到你用了代理，所以爬虫代理也被封得越来越严重了。但是现在代理有一个没有怎么开拓的领域，那就是蜂窝移动，即 4G 代理。目前用 4G 蜂窝移动数据来做代理的相对较少，因此可以算是爬虫代理的一个新的发展方向。但怎么来搭建呢？这就是个问题了。</p>
-<p>在开始之前，可能需要大家提前了解一下为什么我们要用 4G 搭建代理，可以看下这篇文章：<a href="https://mp.weixin.qq.com/s/xlm8biaUinNlNS5hBO7uLw" target="_blank" rel="noopener">震惊，商业级4G代理居然只需要用这些…</a>，看完之后，大家再返回到本文就能比较顺畅地切入了。</p>
-<h4 id="基本思路"><a href="#基本思路" class="headerlink" title="基本思路"></a>基本思路</h4><p>从这篇文章的标题中我们可以看出，这一次的搭建方案主要用到的是 Docker，你可能会很好奇，Docker 跟搭建 4G 代理有什么关系吗？</p>
-<p>嗯，关系很大，我们把整件事情梳理一下，先来看看搭建 4G 代理时的基本流程：</p>
-<ol>
-<li><p>调用网卡拨号，拨号成功后会创建一个虚拟网卡。（正常情况下使用这个虚拟网卡就能上网了）</p>
-<p><img src="https://oss.crawler-lab.com/%E5%95%86%E4%B8%9A%E7%BA%A74G%E4%BB%A3%E7%90%86%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97%E3%80%90%E6%90%AD%E5%BB%BA%E7%AF%87%E4%B9%8BDocker%E7%89%88%E3%80%91/asserts/1.png?x-oss-process=style/weixin" alt></p>
-</li>
-<li><p>在多网卡的情况下，重复第一步，会得到多个虚拟网卡。</p>
-<p><img src="https://oss.crawler-lab.com/%E5%95%86%E4%B8%9A%E7%BA%A74G%E4%BB%A3%E7%90%86%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97%E3%80%90%E6%90%AD%E5%BB%BA%E7%AF%87%E4%B9%8BDocker%E7%89%88%E3%80%91/asserts/2.png?x-oss-process=style/weixin" alt></p>
-</li>
-<li><p>启动代理服务器，使其使用虚拟网卡作为出网网卡，并使用接入内网的实体网卡作为入网网卡。</p>
-<p><img src="https://oss.crawler-lab.com/%E5%95%86%E4%B8%9A%E7%BA%A74G%E4%BB%A3%E7%90%86%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97%E3%80%90%E6%90%AD%E5%BB%BA%E7%AF%87%E4%B9%8BDocker%E7%89%88%E3%80%91/asserts/3.png?x-oss-process=style/weixin" alt="使用起来差不多是这样的"></p>
-</li>
-</ol>
-<p>但是呢，有个问题，根据我之前的测试结果来看，目前在 Linux 环境下还没有一个 HTTP 代理服务器是可以做到分别指定出网网卡和入网网卡的，嗯…这就很麻烦了，因为如果我们无法这么做的话，就会出现类似于下面这样的问题：</p>
-<ol>
-<li>出网和入网都在虚拟网卡上，使用代理服务器必须要走公网访问。</li>
-<li>入网为实体网卡，但出网被代理服务器锁定为了某一个，无法利用到多网卡。</li>
-</ol>
-<p>嗯…那么不用 HTTP 代理服务器，用那些经常被用来做一些骚操作的 Socks5 代理服务器呢？如果可以指定网卡的话，再用像 Privoxy 之类的工具把 Socks5 代理转成 HTTP 代理就好了。（某知名扶墙软件的 Windows 版本就是这么转的 HTTP 代理）</p>
-<p>在经过一番尝试后，我发现虽然有些 Socks5 代理服务器的文档中是说可以指定网卡，但按照说明操作后，似乎并不能直接做到我想要的效果（要么还是锁定在某一个上面、要么上不了网），所以还是存在一些问题的。可能是需要配合路由表设置来进行操作吧，不过我对网络工程的了解不怎么深，搞了几天也没搞出来，于是乎还得想想别的办法。</p>
-<p><img src="https://oss.crawler-lab.com/%E5%95%86%E4%B8%9A%E7%BA%A74G%E4%BB%A3%E7%90%86%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97%E3%80%90%E6%90%AD%E5%BB%BA%E7%AF%87%E4%B9%8BDocker%E7%89%88%E3%80%91/asserts/4.png?x-oss-process=style/weixin_wushuiyin" alt></p>
-<p>这时候，我想到了一个东西——Docker，它可以用来解决这个问题！</p>
-<p>因为 Docker 容器被创建后，不管外界的网卡有多少个，容器内部的网卡都只会有一个Docker自己的虚拟网卡（容器间通信用的）和一个本地环回接口（不用管它），而且我们在容器内进行拨号操作时，产生的那个新的虚拟网卡也不会影响到外界或其他容器，这样的话，代理服务器就不需要指定网卡了，直接启动就能跑！</p>
-<p>那么现在整个流程就跑通了，进入实际操作环节看看吧！</p>
-<hr>
-<h4 id="系统方面"><a href="#系统方面" class="headerlink" title="系统方面"></a>系统方面</h4><p>这个 Docker 版的搭建方式，系统方面的选择很多，由于我使用的样例设备是树莓派，所以这里就选择使用了 Raspbian（树莓派专属版 Debian）。如果你使用的是其他设备的话，直接选择一个自己常用的系统就好。</p>
-<p>那么准备好之后的第一步当然是先下载并安装 Docker，这里我直接使用 Docker 官方提供的一键安装脚本来进行安装：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">curl -fsSL https://get.docker.com -o get-docker.sh</span><br><span class="line">sudo sh get-docker.sh</span><br><span class="line"><span class="comment"># 出自官方文档：https://docs.docker.com/install/linux/docker-ce/debian/#install-using-the-convenience-script</span></span><br></pre></td></tr></table></figure>
-<p>这个一键安装脚本理论上来讲所有 Linux 发行版都可以使用，毕竟已经出来很长时间了，如果不行的话请自行使用搜索引擎查找相关资料。</p>
-<p>装好 Docker 之后，你有两个选择：</p>
-<ol>
-<li>进入体验模式，了解一下具体操作细节是怎么样的。</li>
-<li>不看这一段，翻到本文最下方直接使用我写好的轮子。</li>
-</ol>
-<h4 id="启动容器"><a href="#启动容器" class="headerlink" title="启动容器"></a>启动容器</h4><p>体验的话，我们就直接这么启动一个 Docker 容器吧，执行以下命令：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker run -it --rm --privileged -p 3128:3128 ubuntu:18.04 bash</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>上面这条命令的意思是，启动一个内部系统为 Ubuntu18.04 的容器，并进入容器内部的 Shell 执行 <code>bash</code> 命令，如果退出 bash 就自动销毁容器；然后映射容器内的端口3128到外界，映射出来的外界端口也是3128；最后 <code>privileged</code> 参数是开启特权模式，用于将网卡设备映射进容器内。</p>
-<p>如果下载镜像很慢的话，可以搜一下“Docker 加速器”，也可以直接扶墙。</p>
-</blockquote>
-<h4 id="测试一下网卡是否正常"><a href="#测试一下网卡是否正常" class="headerlink" title="测试一下网卡是否正常"></a>测试一下网卡是否正常</h4><p>进入容器内部后，我们可以执行一下 <code>ls /dev/ttyUSB*</code> 看一下网卡有没有正常被识别出来（在容器外也是一样的，因为开了特权模式），如果是和我买的同一款 4G 网卡的话，在只插入一张网卡的情况下你会看到4个 ttyUSB 设备。</p>
-<p><img src="https://oss.crawler-lab.com/%E5%95%86%E4%B8%9A%E7%BA%A74G%E4%BB%A3%E7%90%86%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97%E3%80%90%E6%90%AD%E5%BB%BA%E7%AF%87%E4%B9%8BDocker%E7%89%88%E3%80%91/asserts/5.png?x-oss-process=style/weixin" alt="插入了三张网卡的样子，一共12个 ttyUSB 设备"></p>
-<blockquote>
-<p>不同 4G 网卡和硬件组合可能会有差异，请以实际情况为准。</p>
-</blockquote>
-<p>如果你可以看到<code>4✖4G网卡个数</code>个 ttyUSB 设备的话，就说明没有问题，可以开始下一步了。</p>
-<h4 id="拨号上网"><a href="#拨号上网" class="headerlink" title="拨号上网"></a>拨号上网</h4><p>接下来要做的就是拨号了，拨号方面可以选择使用 Wvdial 这种工具，也可以选择使用像 Fanconn 这样的商家提供的拨号脚本（直接调用 PPPD），使用起来的效果会有一些区别。如果商家没有提供拨号脚本的话，就用 Wvdial 吧，它能自动生成配置，上手即用。</p>
-<p>我这边的话，由于 Fanconn 的技术人员直接提供了个拨号脚本，那我就用这个脚本了，Wvdial 的文档网上有很多很详尽的，这里就不再多提，需要的朋友自行搜索即可。</p>
-<p>如果你用的是 Fanconn 的这个拨号脚本（怎么弄进容器内就不用我说了吧？），那么直接在 <code>apt install ppp</code> 安装好拨号工具之后，用 <code>chmod +x quectel-pppd.sh</code> 给拨号脚本加个运行权限，然后 <code>./quectel-pppd.sh /dev/ttyUSB3</code> 即可。</p>
-<blockquote>
-<p>拨号时使用的 <code>/dev/ttyUSB3</code> 是指 4G 网卡的第四个通信端口，文档中的解释为：ttyUSB3→For PPP connections or AT command communication，翻译一下就是用于 PPP 连接或 AT 命令通信。</p>
-</blockquote>
-<p>拨号之后用 ifconfig 之类的工具即可看到类似下图中的状态：</p>
-<p><img src="https://oss.crawler-lab.com/%E5%95%86%E4%B8%9A%E7%BA%A74G%E4%BB%A3%E7%90%86%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97%E3%80%90%E6%90%AD%E5%BB%BA%E7%AF%87%E4%B9%8BDocker%E7%89%88%E3%80%91/asserts/6.png?x-oss-process=style/weixin" alt></p>
-<p>可以看到，如前文所述，现在有三个网卡，一个是 Docker 自己的、一个是本地环回接口（这个不用管）、一个是拨号产生的虚拟网卡。</p>
-<blockquote>
-<p>如果不是在 Docker 容器内使用的话，还会有个 wwan0（或其他名字），那个是 4G 网卡本体。</p>
-</blockquote>
-<h4 id="测试是否能正常上网"><a href="#测试是否能正常上网" class="headerlink" title="测试是否能正常上网"></a>测试是否能正常上网</h4><p>现在如果你用 curl 的 <code>--interface</code> 参数指定虚拟网卡进行请求的话（如：<code>curl --interface ppp0 https://ip.cn</code>），是已经可以请求成功的了，IP 也会是你所使用的 SIM 卡对应的运营商分配的。</p>
-<blockquote>
-<p>由于 Docker 的镜像通常都是极度精简的，所以 Ubuntu 镜像里并没有预装像 net-tools、iputils-ping、vim、curl 之类的这些包，需要自行安装。所以如果你发现 ifconfig、ping、curl、vim 用不了，不要惊慌，这是正常现象，执行 <code>apt install 包名</code> 命令安装即可。</p>
-</blockquote>
-<p>如果你无法直接请求成功的话，就可能是 DNS 解析出问题了，可以尝试 ping 一个公网 IP（如：<code>ping 1.1.1.1</code>）和一个域名（如：<code>ping ip.cn</code>），如果 IP 能 ping 通但域名会报 DNS 解析失败的话，就可以确认是 DNS 设置问题了。</p>
-<p>4G 拨号时如果出现 DNS 设置问题，通常是因为拨号工具没有正常地将运营商返回的 DNS 服务器设置写入到配置中，我们可以手动配置一下（你要强制指定某一个 DNS 也可以）：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 以下为阿里云的公共DNS</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">'nameserver 223.5.5.5'</span> &gt;&gt; /etc/resolv.conf</span><br><span class="line"><span class="built_in">echo</span> <span class="string">'nameserver 223.6.6.6'</span> &gt;&gt; /etc/resolv.conf</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>在 Docker 容器中，这个 <code>/etc/resolv.conf</code> 文件可能还会有两条内容，是容器本身所需要的，建议不要删除/覆盖，否则会出现容器间无法使用容器名互相通信的情况。</p>
-</blockquote>
-<h4 id="启动代理服务器"><a href="#启动代理服务器" class="headerlink" title="启动代理服务器"></a>启动代理服务器</h4><p>那么在测试拨号后确实可以通过 4G 网卡上网了之后，我们就可以把代理服务器启动了，这里我使用的是 TinyProxy。</p>
-<blockquote>
-<p>测试发现，Squid 对资源的占用更大一些，不利于多网卡情况下的使用，会影响到 4G 网卡的数量上限。</p>
-</blockquote>
-<p>先 <code>apt install tinyproxy</code> 一波，然后 <code>vim /etc/tinyproxy/tinyproxy.conf</code> 修改一下配置。</p>
-<p>要修改的配置主要有：</p>
-<ul>
-<li>Port 配置项改为3128，因为我们前面映射出来的端口是3128。</li>
-<li>Listen 配置项改为0.0.0.0，因为我们需要在其他设备上使用这个代理服务器。</li>
-<li>Allow 配置项注释掉或改为0.0.0.0/0，默认的127.0.0.1会导致其他设备无法访问。</li>
-</ul>
-<p>改完之后保存一波，然后就可以直接执行 <code>tinyproxy</code> 启动了…吗？</p>
-<p>等等，还有一个操作要做！那就是将默认路由指向到虚拟网卡上，很简单，执行以下命令即可：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">route del -net 0.0.0.0 eth0</span><br><span class="line">route add -net 0.0.0.0 ppp0</span><br></pre></td></tr></table></figure>
-<p>这两条命令的意思是：先将默认的、指向 eth0 这个网卡的上网路由删除，然后添加一个同样的、指向 ppp0 这个网卡的路由。</p>
-<p>改完默认路由后的效果就是，即使你不使用 curl 的 <code>--interface</code> 参数，也能直接使用 4G 网卡上网了。</p>
-<blockquote>
-<p>如果没有改默认路由的话，在不指定网卡的情况下，4G 网卡并不会被使用到，因为默认路由指向的是 Docker 自身的虚拟网卡，那个网卡通向你原本的内网环境。也就是说，IP 不会变！</p>
-</blockquote>
-<p>那么现在，你可以执行 <code>tinyproxy</code> 启动代理服务器了。</p>
-<h4 id="测试代理服务器"><a href="#测试代理服务器" class="headerlink" title="测试代理服务器"></a>测试代理服务器</h4><p>好了，代理服务器应该已经正常启动了，现在我们可以在另一个设备上尝试连接那个容器中的代理服务器，看看是否能正常通过它使用 4G 网卡上网。</p>
-<p>例如我这里树莓派分配到的IP是：<code>192.168.137.66</code>，那么我就可以用这样的 curl 命令或 Python 代码进行测试：</p>
-<p>curl：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">curl <span class="string">"https://ip.cn"</span></span><br><span class="line">curl -x <span class="string">"192.168.137.66:3128"</span> <span class="string">"https://ip.cn"</span></span><br></pre></td></tr></table></figure>
-<p>Python：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line">resp = requests.get(<span class="string">"https://ip.cn"</span>, proxies=&#123;<span class="string">"https"</span>: <span class="string">"http://192.168.137.66:3128"</span>&#125;)</span><br><span class="line">no_proxy_resp = requests.get(<span class="string">"https://ip.cn"</span>)</span><br><span class="line">print(resp.text)</span><br><span class="line">print(no_proxy_resp.text)</span><br></pre></td></tr></table></figure>
-<p>测试出来的结果应该与前面在容器内部测试时的一致，在使用代理后 IP 就变成了运营商分配的基站 IP。</p>
-<h4 id="更换-IP"><a href="#更换-IP" class="headerlink" title="更换 IP"></a>更换 IP</h4><p>那么最核心的问题来了，怎么更换 IP 呢？</p>
-<p>其实和使用那些拨号 VPS 架设代理服务器一样，我们只需要重新拨个号就能换 IP 了，直接 kill 掉 pppd 进程就可以让它断开拨号，断开后重新执行一遍拨号脚本就是重新拨号了。</p>
-<blockquote>
-<p>断开拨号方面 Fanconn 的技术人员也提供了一个脚本，同样在 <code>chmod +x quectel-ppp-kill</code> 赋予运行权限之后，执行 <code>./quectel-ppp-kill</code> 就可以了。</p>
-</blockquote>
-<p>但需要注意的是，蜂窝网络的拨号在断开后，IP 仍然会保留一段时间（具体多久不清楚，可能跟连接的基站也有关系），所以我们需要强制性地让网卡重新搜网。</p>
-<blockquote>
-<p>冷门小知识：手机上开启关闭飞行模式的效果就是重新搜网，通常只是关闭“移动数据”的话，效果是与断开拨号一致的。</p>
-</blockquote>
-<p>怎么做呢？很简单，就两行命令：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">AT+CFUN=0</span><br><span class="line">AT+CFUN=1</span><br></pre></td></tr></table></figure>
-<p>但注意哦，这是 AT 命令，不是 Linux 下的 Shell 命令，AT 命令是一种调制解调器命令语言，我们如果需要将它执行起来，需要这么做：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">"AT+CFUN=0"</span> &gt; /dev/ttyUSB2</span><br><span class="line"><span class="comment"># 中间间隔1秒左右</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"AT+CFUN=1"</span> &gt; /dev/ttyUSB2</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>这里使用的 <code>/dev/ttyUSB2</code> 是指 4G 网卡的第三个通信端口，文档中的解释为：ttyUSB2→For AT command communication，与第四个通信端口类似，只是它不能用于 PPP 连接、只能用于 AT 命令通信而已。</p>
-<p>不同样使用第四个通信端口的原因是那个端口有被占用的可能性，直接区分开最稳妥，本来网卡也就是提供了两个 AT 命令通信渠道的。</p>
-</blockquote>
-<p>在使网卡重新搜网后的几秒至十几/几十秒内的时间里，你无法正常拨号，需要等待它初始化完成后才可以拨号成功，具体等待时间以信号强度为准，我测试的时候通常5秒以内就可以了。</p>
-<p>所以如果你在断开后一直拨号失败，不妨过一会儿再试。</p>
-<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>那么现在操作流程也跑通了，我们也了解到了整个的内部细节，最后要做的就是把每个网卡都分别分配一个容器，这样我们就能实现文章开头所提到的——“使用虚拟网卡作为出网网卡，并使用接入内网的实体网卡作为入网网卡”的效果了。</p>
-<p>实际操作起来的话，就是把指定网卡的部分给配置化，然后在启动容器的时候传入就好了，使用 Docker 的容器环境变量相关设置可以很轻松地实现这个功能。</p>
-<p>最后，我们可以以这个思路，构建一个 docker-compose 模板，模板的核心内容一是做个简易的4G网卡容器集群，二是启动个 Squid，用来聚合代理服务器，这样我们使用的时候只需要指定一个代理服务器就能随机更换了，操作起来更加方便。</p>
-<p>好了，上面就是 Docker 版搭建方式的思路和整个的搭建流程，如果你懒得看的话，直接用我写好的轮子也是可以的，只需要发送消息【Docker版4G代理】到公众号【NightTeam】即可。</p>
-<h4 id="评价"><a href="#评价" class="headerlink" title="评价"></a>评价</h4><p>最后的最后，我给这个搭建方式打个评价吧。</p>
-<p>这个搭建方式并不完美，因为变量太多，而且很多地方肯定不如系统级原生支持的那么稳定，长期使用可能会出现各种奇奇怪怪的问题。</p>
-<p>然后 Docker 的资源占用其实挺高的，会浪费相当多的内存在启动容器上，如果只是两三个网卡还好，如果数量大一点的话，像树莓派2B 这种小内存的设备根本就扛不住。</p>
-<p>另外代理服务器本身对资源的消耗也是比较高的，高频调用下对树莓派2B 的小 CPU 压力还是蛮大的，即使我对它的 CPU 进行了超频，在并发测试时也还是会出现轻松打满 CPU 的情况。</p>
-<p>但是！截止目前，我还有两种基于路由器系统的搭建方案没写出来！所以…敬请期待后续的其他搭建方案。</p>
-
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2019/09/21/Docker搭建商业级4G代理/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
         
       
     </div>
@@ -901,6 +720,9 @@
   <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
   <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
   <script src="/lib/pjax/pjax.min.js?v=0.2.8"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/medium-zoom@1/dist/medium-zoom.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
 <script src="/js/utils.js?v=7.4.0"></script><script src="/js/motion.js?v=7.4.0"></script>
 <script src="/js/schemes/pisces.js?v=7.4.0"></script>
@@ -966,6 +788,8 @@ window.addEventListener('pjax:success', () => {
 
 
 
+
+  <script src="/js/local-search.js?v=7.4.0"></script>
 
 
 

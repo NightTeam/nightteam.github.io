@@ -20,6 +20,7 @@
 
 <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
 <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 
 <script id="hexo-configurations">
@@ -33,8 +34,8 @@
     copycode: {"enable":true,"show_result":true,"style":"mac"},
     back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
     bookmark: {"enable":false,"color":"#222","save":"auto"},
-    fancybox: false,
-    mediumzoom: false,
+    fancybox: true,
+    mediumzoom: true,
     lazyload: false,
     pangu: true,
     algolia: {
@@ -44,8 +45,8 @@
       hits: {"per_page":10},
       labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
     },
-    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
-    path: '',
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
     motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
     translation: {
       copy_button: '复制',
@@ -56,13 +57,13 @@
   };
 </script>
 
-  <meta name="description" content="这是系列文章的第一篇，也是非常重要的一篇，希望大家能读懂我想要表达的意思。 系列文章开篇概述相对于其他编程语言来说，Python 生态中最突出的就是第三方库。任何一个及格的 Python 开发者都使用过至少 5 款第三方库。 就爬虫领域而言，必将用到的例如网络请求库 Requests、网页解析库 Parsel 或 BeautifulSoup、数据库对象关系映射  Motor 或 SQLAlchem">
+  <meta name="description" content="这是系列文章的第一篇，也是非常重要的一篇，希望大家能读懂我想要表达的意思。系列文章开篇概述相对于其他编程语言来说，Python 生态中最突出的就是第三方库。任何一个及格的 Python 开发者都使用过至少 5 款第三方库。就爬虫领域而言，必将用到的例如网络请求库 Requests、网页解析库 Parsel 或 BeautifulSoup、数据库对象关系映射  Motor 或 SQLAlchemy、">
 <meta name="keywords" content="WebSocket">
 <meta property="og:type" content="article">
 <meta property="og:title" content="如何将协议规范变成开源库系列之 WebSocket">
 <meta property="og:url" content="http://blog.nightteam.cn/2019/09/21/如何将协议规范变成开源库系列之WebSocket/index.html">
 <meta property="og:site_name" content="NightTeam">
-<meta property="og:description" content="这是系列文章的第一篇，也是非常重要的一篇，希望大家能读懂我想要表达的意思。 系列文章开篇概述相对于其他编程语言来说，Python 生态中最突出的就是第三方库。任何一个及格的 Python 开发者都使用过至少 5 款第三方库。 就爬虫领域而言，必将用到的例如网络请求库 Requests、网页解析库 Parsel 或 BeautifulSoup、数据库对象关系映射  Motor 或 SQLAlchem">
+<meta property="og:description" content="这是系列文章的第一篇，也是非常重要的一篇，希望大家能读懂我想要表达的意思。系列文章开篇概述相对于其他编程语言来说，Python 生态中最突出的就是第三方库。任何一个及格的 Python 开发者都使用过至少 5 款第三方库。就爬虫领域而言，必将用到的例如网络请求库 Requests、网页解析库 Parsel 或 BeautifulSoup、数据库对象关系映射  Motor 或 SQLAlchemy、">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://user-gold-cdn.xitu.io/2019/9/14/16d2dd8be3d2254d?w=1376&h=910&f=png&s=1290872">
 <meta property="og:image" content="https://user-gold-cdn.xitu.io/2019/9/14/16d2dda24b0853ed?w=312&h=312&f=png&s=127644">
@@ -70,10 +71,10 @@
 <meta property="og:image" content="https://user-gold-cdn.xitu.io/2019/9/14/16d2de2d6c55bdcd?w=900&h=383&f=png&s=222353">
 <meta property="og:image" content="https://user-gold-cdn.xitu.io/2019/9/14/16d2de4a2f5a3b5d?w=978&h=600&f=png&s=74626">
 <meta property="og:image" content="https://user-gold-cdn.xitu.io/2019/9/14/16d2b6eccf4d7221?w=1240&h=672&f=jpeg&s=44507">
-<meta property="og:updated_time" content="2019-09-21T16:24:45.703Z">
+<meta property="og:updated_time" content="2019-09-21T17:35:15.594Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="如何将协议规范变成开源库系列之 WebSocket">
-<meta name="twitter:description" content="这是系列文章的第一篇，也是非常重要的一篇，希望大家能读懂我想要表达的意思。 系列文章开篇概述相对于其他编程语言来说，Python 生态中最突出的就是第三方库。任何一个及格的 Python 开发者都使用过至少 5 款第三方库。 就爬虫领域而言，必将用到的例如网络请求库 Requests、网页解析库 Parsel 或 BeautifulSoup、数据库对象关系映射  Motor 或 SQLAlchem">
+<meta name="twitter:description" content="这是系列文章的第一篇，也是非常重要的一篇，希望大家能读懂我想要表达的意思。系列文章开篇概述相对于其他编程语言来说，Python 生态中最突出的就是第三方库。任何一个及格的 Python 开发者都使用过至少 5 款第三方库。就爬虫领域而言，必将用到的例如网络请求库 Requests、网页解析库 Parsel 或 BeautifulSoup、数据库对象关系映射  Motor 或 SQLAlchemy、">
 <meta name="twitter:image" content="https://user-gold-cdn.xitu.io/2019/9/14/16d2dd8be3d2254d?w=1376&h=910&f=png&s=1290872">
   <link rel="canonical" href="http://blog.nightteam.cn/2019/09/21/如何将协议规范变成开源库系列之WebSocket/">
 
@@ -170,11 +171,11 @@
       
       
         
-        <li class="menu-item menu-item-about">
+        <li class="menu-item menu-item-archives">
       
     
 
-    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
 
   </li>
       
@@ -203,16 +204,54 @@
       
       
         
-        <li class="menu-item menu-item-archives">
+        <li class="menu-item menu-item-about">
       
     
 
-    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
 
   </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-sitemap">
+      
+    
+
+    <a href="/atom.xml" rel="section"><i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br>地图</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a href="javascript:;" class="popup-trigger">
+        
+          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+      </li>
+    
   </ul>
 
 </nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
 </div>
     </header>
 
@@ -279,7 +318,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2019-09-22 00:24:45" itemprop="dateModified" datetime="2019-09-22T00:24:45+08:00">2019-09-22</time>
+                <time title="修改时间：2019-09-22 01:35:15" itemprop="dateModified" datetime="2019-09-22T01:35:15+08:00">2019-09-22</time>
               </span>
             
           
@@ -308,9 +347,9 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>这是系列文章的第一篇，也是非常重要的一篇，希望大家能读懂我想要表达的意思。</p>
-<h1 id="系列文章开篇概述"><a href="#系列文章开篇概述" class="headerlink" title="系列文章开篇概述"></a>系列文章开篇概述</h1><p>相对于其他编程语言来说，Python 生态中最突出的就是第三方库。任何一个及格的 Python 开发者都使用过至少 5 款第三方库。</p>
-<p>就爬虫领域而言，必将用到的例如网络请求库 Requests、网页解析库 Parsel 或 BeautifulSoup、数据库对象关系映射  Motor 或 SQLAlchemy、定时任务 Apscheduler、爬虫框架 Scrapy 等。</p>
+        <p>这是系列文章的第一篇，也是非常重要的一篇，希望大家能读懂我想要表达的意思。</p><h2 id="系列文章开篇概述"><a href="#系列文章开篇概述" class="headerlink" title="系列文章开篇概述"></a>系列文章开篇概述</h2><p>相对于其他编程语言来说，Python 生态中最突出的就是第三方库。任何一个及格的 Python 开发者都使用过至少 5 款第三方库。</p><p>就爬虫领域而言，必将用到的例如网络请求库 Requests、网页解析库 Parsel 或 BeautifulSoup、数据库对象关系映射  Motor 或 SQLAlchemy、定时任务 Apscheduler、爬虫框架 Scrapy 等。</p><a id="more"></a>
+
+
 <p><img src="https://user-gold-cdn.xitu.io/2019/9/14/16d2dd8be3d2254d?w=1376&amp;h=910&amp;f=png&amp;s=1290872" alt></p>
 <p>这些开源库的使用方法想必大家已经非常熟练了，甚至还修炼出了自己的一套技巧，日常工作中敲起键盘肯定也是哒哒哒的响。</p>
 <p>但是你有没有想过：</p>
@@ -333,11 +372,11 @@
 <p>我想通过这篇文章告诉你，不要做那个用库用得很熟练的人，要做那个创造库的人。计算机世界如此吸引人，就是因为我们可以在这个世界里尽情创造。</p>
 <p>你想做一个创造者吗？</p>
 <p>如果不想，那现在你就可以关掉浏览器窗口，回到 Hub 的世界里。</p>
-<h1 id="内容介绍"><a href="#内容介绍" class="headerlink" title="内容介绍"></a>内容介绍</h1><p>这是一套系列文章，这个系列将为大家解读常见库（例如 WebSocket、HTTP、ASCII、Base64、MD5、AES、RSA）的协议规范和对应的代码实现，帮助大家「知其然，知其所以然」。</p>
-<h2 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h2><p>这次我们要学习的是 WebSocket 协议规范和代码实现，也可以理解为从 0 开始编写 <a href="https://github.com/asyncins/aiowebsocket" target="_blank" rel="noopener">aiowebsocket</a> 库。至于为什么选择它，那大概是因为全世界没有比我更熟悉的它的人了。</p>
+<h2 id="内容介绍"><a href="#内容介绍" class="headerlink" title="内容介绍"></a>内容介绍</h2><p>这是一套系列文章，这个系列将为大家解读常见库（例如 WebSocket、HTTP、ASCII、Base64、MD5、AES、RSA）的协议规范和对应的代码实现，帮助大家「知其然，知其所以然」。</p>
+<h3 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h3><p>这次我们要学习的是 WebSocket 协议规范和代码实现，也可以理解为从 0 开始编写 <a href="https://github.com/asyncins/aiowebsocket" target="_blank" rel="noopener">aiowebsocket</a> 库。至于为什么选择它，那大概是因为全世界没有比我更熟悉的它的人了。</p>
 <p><img src="https://user-gold-cdn.xitu.io/2019/9/14/16d2de2d6c55bdcd?w=900&amp;h=383&amp;f=png&amp;s=222353" alt></p>
 <p>我是 aiowebsocket 库的作者，我花了 7 天编写这个库。写库的过程，让我深刻体会到造轮子和驾驶的区别，也让我有了飞速的进步。我希望用连载系列文章的形式帮助大家从驾驶者转换到创造者，拥有「编程思考」。</p>
-<h2 id="前置条件"><a href="#前置条件" class="headerlink" title="前置条件"></a>前置条件</h2><p>WebSocket 是一种在单个 TCP 连接上进行全双工通信的协议，它的出现使客户端和服务器之间的数据交换变得更加简单。下图描述了双端交互的流程:</p>
+<h3 id="前置条件"><a href="#前置条件" class="headerlink" title="前置条件"></a>前置条件</h3><p>WebSocket 是一种在单个 TCP 连接上进行全双工通信的协议，它的出现使客户端和服务器之间的数据交换变得更加简单。下图描述了双端交互的流程:</p>
 <p><img src="https://user-gold-cdn.xitu.io/2019/9/14/16d2de4a2f5a3b5d?w=978&amp;h=600&amp;f=png&amp;s=74626" alt></p>
 <p>WebSocket 通常被应用在实时性要求较高的场景，例如赛事数据、股票证券、网页聊天和在线绘图等。WebSocket 与 HTTP 协议完全不同，但同样被广泛应用。</p>
 <p>无论是后端开发者、前端开发者、爬虫工程师或者信息安全工作者，都应该掌握 WebSocket 协议的知识。</p>
@@ -359,8 +398,8 @@
 <p>接着还需要了解编程语言中内置库 Socket 的基础用法，例如 Python 中的 <a href="https://docs.python.org/3/library/socket.html?highlight=socket#module-socket" target="_blank" rel="noopener">socket</a> 或者更高级更潮的 <a href="https://docs.python.org/3/library/asyncio-stream.html" target="_blank" rel="noopener">Streams</a>、<a href="https://docs.python.org/3/library/asyncio-protocol.html" target="_blank" rel="noopener">Transports and Protocols</a>。如果你是 Go 开发者、Rust 开发者，请查找对应语言的内置库。</p>
 <p>假设你已经熟悉了 RFC6455，你应该知道 Frame 打包和解包的时候需要用到位运算，正好我之前写过位运算相关的文章 <a href="https://gitbook.cn/gitchat/activity/5d4d6d8f6f29256fa317e946" target="_blank" rel="noopener">7分钟全面了解位运算</a>。</p>
 <p>至于其它的，现用现学吧！</p>
-<h1 id="Python-网络通信之-Streams"><a href="#Python-网络通信之-Streams" class="headerlink" title="Python 网络通信之 Streams"></a>Python 网络通信之 Streams</h1><p>WebSocket，也可以理解为在 WEB 应用中使用的 Socket，这意味着本篇将会涉及到 Socket 编程。上面提到，Python 中与 Socket 相关的有 socket、Streams、Transports and Protocols。其中 socket 是同步的，而另外两个是异步的，这俩属于你常听到的 asyncio。</p>
-<h2 id="Socket-通信过程"><a href="#Socket-通信过程" class="headerlink" title="Socket 通信过程"></a>Socket 通信过程</h2><p>Socket 是端到端的通信，所以我们要搞清楚消息是怎么从一台机器发送到另一台机器的，这很重要。假设通信的两台机器为 Client 和 Server，Client 向 Server 发送消息的过程如下图所示：</p>
+<h2 id="Python-网络通信之-Streams"><a href="#Python-网络通信之-Streams" class="headerlink" title="Python 网络通信之 Streams"></a>Python 网络通信之 Streams</h2><p>WebSocket，也可以理解为在 WEB 应用中使用的 Socket，这意味着本篇将会涉及到 Socket 编程。上面提到，Python 中与 Socket 相关的有 socket、Streams、Transports and Protocols。其中 socket 是同步的，而另外两个是异步的，这俩属于你常听到的 asyncio。</p>
+<h3 id="Socket-通信过程"><a href="#Socket-通信过程" class="headerlink" title="Socket 通信过程"></a>Socket 通信过程</h3><p>Socket 是端到端的通信，所以我们要搞清楚消息是怎么从一台机器发送到另一台机器的，这很重要。假设通信的两台机器为 Client 和 Server，Client 向 Server 发送消息的过程如下图所示：</p>
 <p><img src="https://user-gold-cdn.xitu.io/2019/9/14/16d2b6eccf4d7221?w=1240&amp;h=672&amp;f=jpeg&amp;s=44507" alt></p>
 <blockquote>
 <p>Client 通过文件描述符的读写 API  read &amp; write 来访问操作系统内核中的网络模块为当前套接字分配的发送  send buffer 和接收 recv buffer 缓存。</p>
@@ -370,7 +409,7 @@
 </blockquote>
 <p>上述通信过程的描述和图片均出自钱文品的深入理解 RPC 交互流程。</p>
 <p>我尝试寻找通信过程中每个步骤的依据（尤其是 send buffer to NIC to recv buffer），（我翻阅了 TCP 的 RFC 和 Kernel.org）但遗憾的是并未找到有力的证明（一定是我太菜了），如果有朋友知道，可以评论告诉我或发邮件 zenrusts@sina.com 告诉我，我可以扩展出另一篇文章。</p>
-<h2 id="创建-Streams"><a href="#创建-Streams" class="headerlink" title="创建 Streams"></a>创建 Streams</h2><p>那么问题来了：在 Python 中，我们如何实现端到端的消息发送呢？</p>
+<h3 id="创建-Streams"><a href="#创建-Streams" class="headerlink" title="创建 Streams"></a>创建 Streams</h3><p>那么问题来了：在 Python 中，我们如何实现端到端的消息发送呢？</p>
 <p>答：Python 提供了一些对象帮助我们实现这个需求，其中相对简单易用的是 Streams。</p>
 <p>Streams 是 Python Asynchronous I/O 中提供的 High-level APIs。Python 官方文档对 Streams 的介绍如下：</p>
 <blockquote>
@@ -397,7 +436,7 @@
 * 接着使用 reader 对象中的 `read()` 方法从 IO 流中读取消息，并将消息打印到终端。
 </code></pre><p>看到这里，你或许会有另一个疑问：<code>write()</code> 只是将消息写入到 IO 流，并没有发送行为，那消息是如何传输到 Server 的呢？</p>
 <p>由于无法直接跟进 CPython 源代码，所以我们无法得到确切的结果。但我们可以跟进 Python 代码，得知消息最后传输到 <code>transport.write()</code> ，如果你想知道更多，可以去看 Transports and Protocols 的介绍。你可以将这个过程抽象为上图的 Client to  send buffer to NIC to recv buffer to Server。</p>
-<h1 id="功能模块设计"><a href="#功能模块设计" class="headerlink" title="功能模块设计"></a>功能模块设计</h1><p>通过上面的学习，现在你已经掌握了 WebSocket 协议规范和 Python Streams 的基本用法，接下来就可以设计一个 WebSocket 客户端库了。</p>
+<h2 id="功能模块设计"><a href="#功能模块设计" class="headerlink" title="功能模块设计"></a>功能模块设计</h2><p>通过上面的学习，现在你已经掌握了 WebSocket 协议规范和 Python Streams 的基本用法，接下来就可以设计一个 WebSocket 客户端库了。</p>
 <p>根据 RFC6455 的约定，WebSocket 之前是 HTTP，通过「握手」来升级协议。协议升级后进入真正的 WebSocket 通信，通信包含发送（Send）和接收（Recv）。文本消息要在传输过程前转换为 Frames，而接受端读取到消息后要将 Frames 转换成文本。当然，期间会有一些异常产生，我们可能需要自定义异常，以快速定位问题所在。现在我们得出了几个模块：</p>
 <pre><code>* 握手 - ShakeHands
 
@@ -408,7 +447,7 @@
 * 异常 - Exceptions
 </code></pre><p>一切准备就绪后，就可以进入真正的编码环节了。</p>
 <p>由于实战编码篇幅太长，我决定放到下一期，这期的内容，读者们可能需要花费一些时间吸收。</p>
-<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>开篇我强调了「创造能力」有多么重要，甚至抛出了一些不是很贴切的例子，但我就是想告诉你，不要做调参🐶。</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>开篇我强调了「创造能力」有多么重要，甚至抛出了一些不是很贴切的例子，但我就是想告诉你，不要做调参🐶。</p>
 <p>然后我告诉你，本篇文章要讲解的是 WebSocket。</p>
 <p>接着又跟你说，要掌握 WebSocket 协议，如果你无法独立啃完 RFC6455，还可以看我写过的几篇关于 WebSocket 文章和位运算文章。</p>
 <p>过了几分钟，给你展示了 Socket 的通信过程，虽然没有强有力的依据，但你可以假设这是对的。</p>
@@ -521,7 +560,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#系列文章开篇概述"><span class="nav-number">1.</span> <span class="nav-text">系列文章开篇概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#内容介绍"><span class="nav-number">2.</span> <span class="nav-text">内容介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#目标"><span class="nav-number">2.1.</span> <span class="nav-text">目标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#前置条件"><span class="nav-number">2.2.</span> <span class="nav-text">前置条件</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Python-网络通信之-Streams"><span class="nav-number">3.</span> <span class="nav-text">Python 网络通信之 Streams</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Socket-通信过程"><span class="nav-number">3.1.</span> <span class="nav-text">Socket 通信过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建-Streams"><span class="nav-number">3.2.</span> <span class="nav-text">创建 Streams</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#功能模块设计"><span class="nav-number">4.</span> <span class="nav-text">功能模块设计</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#小结"><span class="nav-number">5.</span> <span class="nav-text">小结</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#系列文章开篇概述"><span class="nav-number">1.</span> <span class="nav-text">系列文章开篇概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内容介绍"><span class="nav-number">2.</span> <span class="nav-text">内容介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#目标"><span class="nav-number">2.1.</span> <span class="nav-text">目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#前置条件"><span class="nav-number">2.2.</span> <span class="nav-text">前置条件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Python-网络通信之-Streams"><span class="nav-number">3.</span> <span class="nav-text">Python 网络通信之 Streams</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Socket-通信过程"><span class="nav-number">3.1.</span> <span class="nav-text">Socket 通信过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建-Streams"><span class="nav-number">3.2.</span> <span class="nav-text">创建 Streams</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#功能模块设计"><span class="nav-number">4.</span> <span class="nav-text">功能模块设计</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小结"><span class="nav-number">5.</span> <span class="nav-text">小结</span></a></li></ol></div>
         
       </div>
       <!--/noindex-->
@@ -650,6 +689,9 @@
   <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
   <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
   <script src="/lib/pjax/pjax.min.js?v=0.2.8"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/medium-zoom@1/dist/medium-zoom.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
 <script src="/js/utils.js?v=7.4.0"></script><script src="/js/motion.js?v=7.4.0"></script>
 <script src="/js/schemes/pisces.js?v=7.4.0"></script>
@@ -715,6 +757,8 @@ window.addEventListener('pjax:success', () => {
 
 
 
+
+  <script src="/js/local-search.js?v=7.4.0"></script>
 
 
 
