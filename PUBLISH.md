@@ -18,11 +18,22 @@ npm install -g hexo-cli
 
 安装完毕之后确保可以使用 `hexo` 命令。
 
+## 克隆项目
+
+命令如下：
+
+```
+git clone git@github.com:NightTeam/nightteam.github.io.git nightteam
+```
+
+完成之后本地会创建一个 nightteam 文件夹，即博客源文件。
+
 ## 创建文章
 
 使用如下命令创建一篇文章，如创建一篇「HelloWorld」的文章，命令如下：
 
 ```
+cd nightteam
 hexo new hello-world
 ```
 
