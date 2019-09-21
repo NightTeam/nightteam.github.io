@@ -1808,7 +1808,7 @@ article:last-child .post-eof {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #ff2;
+  background: #70ec44;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
@@ -2121,6 +2121,14 @@ article:last-child .post-eof {
   50%, 70% {
     transform: scale(1.1);
   }
+}
+.gt-header a,
+.gt-comments a,
+.gt-popup a {
+  border-bottom: none;
+}
+.gt-container .gt-popup .gt-action.is--active::before {
+  top: 0.7em;
 }
 .category-all-page .category-all-title {
   text-align: center;

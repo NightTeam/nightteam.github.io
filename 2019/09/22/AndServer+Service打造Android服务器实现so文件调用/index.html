@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png?v=7.4.0">
+  <link rel="mask-icon" href="/images/safari-pinned-tab.svg?v=7.4.0" color="#222">
+  <link rel="alternate" href="/atom.xml" title="NightTeam" type="application/atom+xml">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.4.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":"mac"},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: true,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="so 文件调用随着 Android 移动安全的高速发展，不管是为了执行效率还是程序的安全性等，关键代码下沉 native 层已成为基本操作。native 层的开发就是通指的 JNI/NDK 开发，通过 JNI 可以实现 java 层和 native 层（主要是 C/C++ ）的相互调用，native 层经编译后产生 so 动态链接库，so 文件具有可移植性广，执行效率高，保密性强等优点。那么问题来">
+<meta name="keywords" content="AndServer,Android">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AndServer+Service 打造 Android 服务器实现 so 文件调用">
+<meta property="og:url" content="http://blog.nightteam.cn/2019/09/22/AndServer+Service打造Android服务器实现so文件调用/index.html">
+<meta property="og:site_name" content="NightTeam">
+<meta property="og:description" content="so 文件调用随着 Android 移动安全的高速发展，不管是为了执行效率还是程序的安全性等，关键代码下沉 native 层已成为基本操作。native 层的开发就是通指的 JNI/NDK 开发，通过 JNI 可以实现 java 层和 native 层（主要是 C/C++ ）的相互调用，native 层经编译后产生 so 动态链接库，so 文件具有可移植性广，执行效率高，保密性强等优点。那么问题来">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://pxx0jx04s.bkt.clouddn.com/FnI6Y8rCEUPsGF-Crl6fHbS1Jj7O">
+<meta property="og:image" content="http://pxx0jx04s.bkt.clouddn.com/Fgsl4Zg7LocRkHREXLpBUaJDKsDB">
+<meta property="og:image" content="http://pxx0jx04s.bkt.clouddn.com/FjUP5ssOtJSkb-Qas0liRT9yseIG">
+<meta property="og:image" content="http://pxx0jx04s.bkt.clouddn.com/FqHDAvfRfENxubUUG16galS4NPX8">
+<meta property="og:image" content="http://pxx0jx04s.bkt.clouddn.com/Fv-pvgJ3-5DL7P_0kvWZ6uRFODpJ">
+<meta property="og:image" content="http://pxx0jx04s.bkt.clouddn.com/FtMaZriK312NMGuHHfnslHxH-DRq">
+<meta property="og:image" content="http://pxx0jx04s.bkt.clouddn.com/FlZPSXoC-nljUM-57UYm7IBh78F8">
+<meta property="og:image" content="http://pxx0jx04s.bkt.clouddn.com/FpwqVRWawPLsdE4BkB4vk51YeEfj">
+<meta property="og:image" content="http://pxx0jx04s.bkt.clouddn.com/FoiTsSgJMVTp5IPlTpk899AfjE-v">
+<meta property="og:image" content="http://pxx0jx04s.bkt.clouddn.com/FgO0OfbGufmBi__W0HBQ1PqTfo-w">
+<meta property="og:image" content="http://pxx0jx04s.bkt.clouddn.com/Flpyzen_6rJH_YOM86WS6-57AE2L">
+<meta property="og:image" content="http://pxx0jx04s.bkt.clouddn.com/Fh7PsV-Ha67UumUhNt_7HfoziS0G">
+<meta property="og:image" content="http://pxx0jx04s.bkt.clouddn.com/FiB44r5XTQIKOZ4wbNtAUaql_PpL">
+<meta property="og:image" content="http://pxx0jx04s.bkt.clouddn.com/FrxfrVW-TP5EGegkMIlpKNiiTyqI">
+<meta property="og:image" content="http://pxx0jx04s.bkt.clouddn.com/FgJn1_mmO3xfu8bC4tdiM-uUHM-w">
+<meta property="og:image" content="http://pxx0jx04s.bkt.clouddn.com/FsWGhs2q4d-zwYjEZJXYIc8LJor9">
+<meta property="og:image" content="http://pxx0jx04s.bkt.clouddn.com/Fkon0mUBUUpqbbsDaQPvdc_xb2aE">
+<meta property="og:image" content="http://pxx0jx04s.bkt.clouddn.com/Fl17ks9HRNRDTi-FeHAHz9GRNFXF">
+<meta property="og:image" content="http://pxx0jx04s.bkt.clouddn.com/FolDpPh19DiCx3b5eKxT8EHCTZVs">
+<meta property="og:image" content="http://pxx0jx04s.bkt.clouddn.com/FuKPa8wpqZ41LMC8vmCS3QTol2GN">
+<meta property="og:image" content="http://pxx0jx04s.bkt.clouddn.com/Fp461KQ3wzQ_WYMW0XTO1i4bGebI">
+<meta property="og:image" content="http://pxx0jx04s.bkt.clouddn.com/Ft3ZLJIdLXcfd-zwp4K3zVfTXta9">
+<meta property="og:updated_time" content="2019-09-21T16:45:58.060Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="AndServer+Service 打造 Android 服务器实现 so 文件调用">
+<meta name="twitter:description" content="so 文件调用随着 Android 移动安全的高速发展，不管是为了执行效率还是程序的安全性等，关键代码下沉 native 层已成为基本操作。native 层的开发就是通指的 JNI/NDK 开发，通过 JNI 可以实现 java 层和 native 层（主要是 C/C++ ）的相互调用，native 层经编译后产生 so 动态链接库，so 文件具有可移植性广，执行效率高，保密性强等优点。那么问题来">
+<meta name="twitter:image" content="http://pxx0jx04s.bkt.clouddn.com/FnI6Y8rCEUPsGF-Crl6fHbS1Jj7O">
+  <link rel="canonical" href="http://blog.nightteam.cn/2019/09/22/AndServer+Service打造Android服务器实现so文件调用/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>AndServer+Service 打造 Android 服务器实现 so 文件调用 | NightTeam</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">NightTeam</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-about">
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/NightTeam" class="github-corner" title="NightTeam GitHub" aria-label="NightTeam GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="http://blog.nightteam.cn/2019/09/22/AndServer+Service打造Android服务器实现so文件调用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="NightTeam">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="NightTeam">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">AndServer+Service 打造 Android 服务器实现 so 文件调用
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2019-09-22 00:23:08 / 修改时间：00:45:58" itemprop="dateCreated datePublished" datetime="2019-09-22T00:23:08+08:00">2019-09-22</time>
+            </span>
+          
+            
+
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/逆向/" itemprop="url" rel="index"><span itemprop="name">逆向</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h4 id="so-文件调用"><a href="#so-文件调用" class="headerlink" title="so 文件调用"></a>so 文件调用</h4><p>随着 Android 移动安全的高速发展，不管是为了执行效率还是程序的安全性等，关键代码下沉 native 层已成为基本操作。<br>native 层的开发就是通指的 JNI/NDK 开发，通过 JNI 可以实现 java 层和 native 层（主要是 C/C++ ）的相互调用，native 层经编译后产生 so 动态链接库，so 文件具有可移植性广，执行效率高，保密性强等优点。<br>那么问题来了，如何调用 so 文件显得异常重要，当然你也可以直接分析 so 文件的伪代码，利用强悍的编程功底直接模拟关键操作，但是我想对于普通人来说头发还是比较重要的。<br>当前调用 so 文件的主流操作应该是：<br>1，基于 Unicorn 的各种实现（还在学习中，暂且不表）<br>2，Android 服务器的搭建，在 App 内起 http 服务完成调用 so 的需求（当然前提是过了 so 的效验等操作）<br>至于为什么选用 AndServer，好吧，不为什么，只是因为搜索到了它<br>为什么结合 Service，在学习 Android 开发的时候了解到了 Service 的生命周期，个人理解用 Service 去创建 Http 服务比较好。<br>当然也有 Application 的简单使用，因为在正式环境中，大多数 so 文件的逻辑中都有 context 的一些包名了，签名了的效验等，自定义 Application 的话获取 context 传参就好了。</p>
+<h4 id="libyemu-so-简介"><a href="#libyemu-so-简介" class="headerlink" title="libyemu.so 简介"></a>libyemu.so 简介</h4><p>这是我编译好的一个 so 文件，就是根据入参做下简单的字符串拼接（以下是 native 层编译前的 c 代码）<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">extern &quot;C&quot;</span><br><span class="line">JNIEXPORT jstring JNICALL</span><br><span class="line">Java_com_fw_myapplication_ndktest_NdkTest_stringFromUTF(JNIEnv *env, jobject instance, jstring str_) &#123;</span><br><span class="line">    jclass String_clazz = env-&gt;FindClass(&quot;java/lang/String&quot;);</span><br><span class="line"></span><br><span class="line">    jmethodID concat_methodID = env-&gt;GetMethodID(String_clazz, &quot;concat&quot;, &quot;(Ljava/lang/String;)Ljava/lang/String;&quot;);</span><br><span class="line"></span><br><span class="line">    jstring str = env-&gt;NewStringUTF(&quot;  from so --[NightTeam夜幕]&quot;);</span><br><span class="line"></span><br><span class="line">    jobject str1 = env-&gt;CallObjectMethod(str_, concat_methodID, str);</span><br><span class="line"></span><br><span class="line">    const char *chars = env-&gt;GetStringUTFChars((jstring)str1, 0);</span><br><span class="line"></span><br><span class="line">    return env-&gt;NewStringUTF(chars);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这部分代码还是有必要贴一下的，简单的静态注册使用了反射的思想，反射在逆向中至关重要<br>接下来是 java 代码，定义了 native 函数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">package com.fw.myapplication.ndktest;</span><br><span class="line"></span><br><span class="line">public class NdkTest &#123;</span><br><span class="line">    public static native String stringFromUTF(String str);</span><br><span class="line"></span><br><span class="line">    static &#123;</span><br><span class="line">        System.loadLibrary(&quot;yemu&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>如果到这里有点懵逼的同学可能需要去补下 Android 开发基础了</p>
+<h4 id="Android-项目测试-so"><a href="#Android-项目测试-so" class="headerlink" title="Android 项目测试 so"></a>Android 项目测试 so</h4><p>先说下我的环境，因为这个环境影响太大了<br>1，AndroidStudio 3.4<br>2，手机 Android 6 架构 armeabi-v7a<br>打开 AndroidStudio 新建 project<br><img src="http://pxx0jx04s.bkt.clouddn.com/FnI6Y8rCEUPsGF-Crl6fHbS1Jj7O" alt><br>在 module 的 build 中加这么一句，然后 sync<br><img src="http://pxx0jx04s.bkt.clouddn.com/Fgsl4Zg7LocRkHREXLpBUaJDKsDB" alt><br>把编译好的 so 文件复制到 libs 文件夹下（和刚才的 jniLibs.srcDirs 对应）<br><img src="http://pxx0jx04s.bkt.clouddn.com/FjUP5ssOtJSkb-Qas0liRT9yseIG" alt><br>把 so 对应的 java 代码也 copy 过来，注意包名类名的一致性<br><img src="http://pxx0jx04s.bkt.clouddn.com/FqHDAvfRfENxubUUG16galS4NPX8" alt><br>打开 activity_main.xml 文件为 TextView 添加 id<br><img src="http://pxx0jx04s.bkt.clouddn.com/Fv-pvgJ3-5DL7P_0kvWZ6uRFODpJ" alt><br>打开 MainActiviy.java 开始编码<br><img src="http://pxx0jx04s.bkt.clouddn.com/FtMaZriK312NMGuHHfnslHxH-DRq" alt><br>这两行的意思就是，先从布局中找到对应 id 的 TextView，然后为其设置 Text（调用 native 函数的返回值）<br>下面测试一下咱们的 so 调用情况<br><img src="http://pxx0jx04s.bkt.clouddn.com/FlZPSXoC-nljUM-57UYm7IBh78F8" alt><br>可以看到咱们的 so 文件调用成功（这里咱们的 so 没有效验，只是测试 app 是否可以正常调用）</p>
+<h4 id="AndServer-代码编写"><a href="#AndServer-代码编写" class="headerlink" title="AndServer 代码编写"></a>AndServer 代码编写</h4><p>AndServer 官方文档：<a href="https://yanzhenjie.com/AndServer/" target="_blank" rel="noopener">https://yanzhenjie.com/AndServer/</a><br>打开官方文档，看看人家的入门介绍，新建 java 文件<br><img src="http://pxx0jx04s.bkt.clouddn.com/FpwqVRWawPLsdE4BkB4vk51YeEfj" alt><br>如图经典 MVC 的 C 就写好了，定义了一个 nightteam_sign 接口，请求方式为 get，请求参数为 sign，调用 native 函数，然后返回 json，但是这里我想利用 Application 获取下 context 对象，取下包名，接下来自定义 Applictaion<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">package com.nightteam.httpso;</span><br><span class="line"></span><br><span class="line">import android.app.Application;</span><br><span class="line"></span><br><span class="line">public class MyApp extends Application &#123;</span><br><span class="line">    private static MyApp myApp;</span><br><span class="line">    public static MyApp getInstance() &#123;</span><br><span class="line">        return myApp;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void onCreate() &#123;</span><br><span class="line">        super.onCreate();</span><br><span class="line">        myApp = this;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>然后在 manifest 文件中指定要启动的 Application<br><img src="http://pxx0jx04s.bkt.clouddn.com/FoiTsSgJMVTp5IPlTpk899AfjE-v" alt><br>然后修改 MyController.java 的代码<br><img src="http://pxx0jx04s.bkt.clouddn.com/FgO0OfbGufmBi__W0HBQ1PqTfo-w" alt><br>接下来把官方文档-服务器的代码 copy 下来<br>导入一些包，修改部分代码如下<br><img src="http://pxx0jx04s.bkt.clouddn.com/Flpyzen_6rJH_YOM86WS6-57AE2L" alt><br>新版本的 AndServer.serverBuilder 已经需要传递 context 了，这里把网络地址和端口号也修改为从构造参数中获取，到这里 AndServer 的东西基本完了，实际上咱们就搭建一个调 so 的接口，并没有过多的业务逻辑，所以代码就是使用的最简单的</p>
+<h4 id="Service-代码编写"><a href="#Service-代码编写" class="headerlink" title="Service 代码编写"></a>Service 代码编写</h4><p>咱们这里用按钮的点击事件启动 Service，故在 activity_main.xml 中添加一个 button 并指定点击事件<br><img src="http://pxx0jx04s.bkt.clouddn.com/Fh7PsV-Ha67UumUhNt_7HfoziS0G" alt><br><img src="http://pxx0jx04s.bkt.clouddn.com/FiB44r5XTQIKOZ4wbNtAUaql_PpL" alt><br>接下来编写自定义 Service 代码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">package com.nightteam.httpso.Service;</span><br><span class="line"></span><br><span class="line">import android.app.Service;</span><br><span class="line">import android.content.Intent;</span><br><span class="line">import android.os.IBinder;</span><br><span class="line">import android.util.Log;</span><br><span class="line"></span><br><span class="line">import com.nightteam.httpso.ServerManager;</span><br><span class="line"></span><br><span class="line">import java.net.InetAddress;</span><br><span class="line">import java.net.UnknownHostException;</span><br><span class="line"></span><br><span class="line">public class MyService extends Service &#123;</span><br><span class="line">    private static final String TAG = &quot;NigthTeam&quot;;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void onCreate() &#123;</span><br><span class="line">        super.onCreate();</span><br><span class="line">        Log.d(TAG, &quot;onCreate: MyService&quot;);</span><br><span class="line">        new Thread() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void run() &#123;</span><br><span class="line">                super.run();</span><br><span class="line">                InetAddress inetAddress = null;</span><br><span class="line">                try &#123;</span><br><span class="line">                    inetAddress = InetAddress.getByName(&quot;0.0.0.0&quot;);</span><br><span class="line">                    Log.d(TAG, &quot;onCreate: &quot; + inetAddress.getHostAddress());</span><br><span class="line">                    ServerManager serverManager = new ServerManager(getApplicationContext(), inetAddress, 8005);</span><br><span class="line">                    serverManager.startServer();</span><br><span class="line">                &#125; catch (UnknownHostException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;.start();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public IBinder onBind(Intent intent) &#123;</span><br><span class="line">        return null;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>打上了几个 log，在子线程中启动 AndServer 的服务（何时使用 UI 线程和子线程是 Android 基础，这里就不赘述了）<br>注意一下，这里从 0.0.0.0 获取 inetAddress，可不要写错了，localhost 和 0.0.0.0 的区别请移步搜索引擎<br>然后就是向 ServerManager 的构造函数传递 context，inetAddress，port 用来 new 对象，随后开启服务<br>最后注意检查下 manifest 文件中 Service 的声明<br><img src="http://pxx0jx04s.bkt.clouddn.com/FrxfrVW-TP5EGegkMIlpKNiiTyqI" alt></p>
+<h4 id="开启-Service，并获取本机-ip"><a href="#开启-Service，并获取本机-ip" class="headerlink" title="开启 Service，并获取本机 ip"></a>开启 Service，并获取本机 ip</h4><p>回到我们的 MainActivity.java 的 operate（ button 的点击事件）编写启动 Service 代码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public void operate(View view) &#123;</span><br><span class="line">    switch (view.getId())&#123;</span><br><span class="line">        case R.id.id_bt_index:</span><br><span class="line">            //启动服务:创建--&gt;启动--&gt;销毁</span><br><span class="line">            //如果服务已经创建了，后续重复启动，操作的都是同一个服务，不会再重新创建了，除非你先销毁它</span><br><span class="line">            Intent it1 = new Intent(this, MyService.class);</span><br><span class="line">            Log.d(TAG, &quot;operate: button&quot;);</span><br><span class="line">            startService(it1);</span><br><span class="line">            ((Button) view).setText(&quot;服务已开启&quot;);</span><br><span class="line">            break;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>到这里我们的服务基本搭建好了，但是为了方便起见，我想把咱们的本机 ip 显示在 App 上，这样我们就不用去设置再查看了<br>我在网上找到了一个获取 ip 地址的一个工具类，源码如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line">package com.nightteam.httpso;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">import java.net.InetAddress;</span><br><span class="line">import java.net.NetworkInterface;</span><br><span class="line">import java.net.SocketException;</span><br><span class="line">import java.util.Enumeration;</span><br><span class="line">import java.util.regex.Pattern;</span><br><span class="line"></span><br><span class="line">public class NetUtils &#123;</span><br><span class="line"></span><br><span class="line">    private static final Pattern IPV4_PATTERN = Pattern.compile(&quot;^(&quot; +</span><br><span class="line"></span><br><span class="line">            &quot;([0-9]|[1-9][0-9]|1[0-9]&#123;2&#125;|2[0-4][0-9]|25[0-5])\\.)&#123;3&#125;&quot; +</span><br><span class="line"></span><br><span class="line">            &quot;([0-9]|[1-9][0-9]|1[0-9]&#123;2&#125;|2[0-4][0-9]|25[0-5])$&quot;);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    private static boolean isIPv4Address(String input) &#123;</span><br><span class="line"></span><br><span class="line">        return IPV4_PATTERN.matcher(input).matches();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //获取本机IP地址</span><br><span class="line"></span><br><span class="line">    public static InetAddress getLocalIPAddress() &#123;</span><br><span class="line"></span><br><span class="line">        Enumeration&lt;NetworkInterface&gt; enumeration = null;</span><br><span class="line"></span><br><span class="line">        try &#123;</span><br><span class="line"></span><br><span class="line">            enumeration = NetworkInterface.getNetworkInterfaces();</span><br><span class="line"></span><br><span class="line">        &#125; catch (SocketException e) &#123;</span><br><span class="line"></span><br><span class="line">            e.printStackTrace();</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if (enumeration != null) &#123;</span><br><span class="line"></span><br><span class="line">            while (enumeration.hasMoreElements()) &#123;</span><br><span class="line"></span><br><span class="line">                NetworkInterface nif = enumeration.nextElement();</span><br><span class="line"></span><br><span class="line">                Enumeration&lt;InetAddress&gt; inetAddresses = nif.getInetAddresses();</span><br><span class="line"></span><br><span class="line">                if (inetAddresses != null)</span><br><span class="line"></span><br><span class="line">                    while (inetAddresses.hasMoreElements()) &#123;</span><br><span class="line"></span><br><span class="line">                        InetAddress inetAddress = inetAddresses.nextElement();</span><br><span class="line"></span><br><span class="line">                        if (!inetAddress.isLoopbackAddress() &amp;&amp; isIPv4Address(inetAddress.getHostAddress())) &#123;</span><br><span class="line"></span><br><span class="line">                            return inetAddress;</span><br><span class="line"></span><br><span class="line">                        &#125;</span><br><span class="line"></span><br><span class="line">                    &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        return null;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>把工具类 copy 到我们的 Android 项目中，继续在 MainActivity.java 中编码<br><img src="http://pxx0jx04s.bkt.clouddn.com/FgJn1_mmO3xfu8bC4tdiM-uUHM-w" alt><br>获取了一下本机地址和 Android SDK 版本（ Android 8 之后启动 Service 方式不一样）</p>
+<h4 id="申请权限，启动-App"><a href="#申请权限，启动-App" class="headerlink" title="申请权限，启动 App"></a>申请权限，启动 App</h4><p>最后一步就是为 app 申请网络权限了<br><img src="http://pxx0jx04s.bkt.clouddn.com/FsWGhs2q4d-zwYjEZJXYIc8LJor9" alt><br>随后连接我们的手机，运行项目，测试一下，点击开启服务<br><img src="http://pxx0jx04s.bkt.clouddn.com/Fkon0mUBUUpqbbsDaQPvdc_xb2aE" alt><br>看下 AndroidStudio 日志<br><img src="http://pxx0jx04s.bkt.clouddn.com/Fl17ks9HRNRDTi-FeHAHz9GRNFXF" alt><br>好像一切正常，在浏览器访问下试试（ ip 就是 App 中显示的 ip 地址）<br><img src="http://pxx0jx04s.bkt.clouddn.com/FolDpPh19DiCx3b5eKxT8EHCTZVs" alt><br>如图正常访问到了我们想要的内容<br>回过头来说下 Service，打开我们手机的设置，找到应用程序管理-运行中的服务（手机不同，方式不同）<br><img src="http://pxx0jx04s.bkt.clouddn.com/FuKPa8wpqZ41LMC8vmCS3QTol2GN" alt><br>可以看到我们的程序，运行了一个服务，这个服务就是咱们编码的 MyService<br><img src="http://pxx0jx04s.bkt.clouddn.com/Fp461KQ3wzQ_WYMW0XTO1i4bGebI" alt><br>接下来杀掉该 App进程，再次查看运行中的服务<br><img src="http://pxx0jx04s.bkt.clouddn.com/Ft3ZLJIdLXcfd-zwp4K3zVfTXta9" alt><br>我这里在权限管理设置了自动运行，可以保持服务的运行。（这个地方还是根据系统有大小差异）<br>至此使用 App 起 http 服务调 so 就完成了</p>
+<p>好了，上面就是利用 AndServer 打造 Android 服务器调 so 文件的整体思路和流程，如果你懒得看的话，直接用我写好的 App 修修补补也是可以的，只需要发送消息【AndServer搭建Web服务调so】到公众号【NightTeam】即可。</p>
+
+    </div>
+
+    
+    
+    
+        
+      
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>NightTeam</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://blog.nightteam.cn/2019/09/22/AndServer+Service打造Android服务器实现so文件调用/" title="AndServer+Service 打造 Android 服务器实现 so 文件调用">http://blog.nightteam.cn/2019/09/22/AndServer+Service打造Android服务器实现so文件调用/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！</li>
+</ul>
+</div>
+
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/AndServer/" rel="tag"># AndServer</a>
+            
+              <a href="/tags/Android/" rel="tag"># Android</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/09/21/如何将协议规范变成开源库系列之WebSocket/" rel="next" title="如何将协议规范变成开源库系列之 WebSocket">
+                  <i class="fa fa-chevron-left"></i> 如何将协议规范变成开源库系列之 WebSocket
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+    
+    <div class="comments" id="gitalk-container"></div>
+  
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#so-文件调用"><span class="nav-number">1.</span> <span class="nav-text">so 文件调用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#libyemu-so-简介"><span class="nav-number">2.</span> <span class="nav-text">libyemu.so 简介</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Android-项目测试-so"><span class="nav-number">3.</span> <span class="nav-text">Android 项目测试 so</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#AndServer-代码编写"><span class="nav-number">4.</span> <span class="nav-text">AndServer 代码编写</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Service-代码编写"><span class="nav-number">5.</span> <span class="nav-text">Service 代码编写</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#开启-Service，并获取本机-ip"><span class="nav-number">6.</span> <span class="nav-text">开启 Service，并获取本机 ip</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#申请权限，启动-App"><span class="nav-number">7.</span> <span class="nav-text">申请权限，启动 App</span></a></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="/images/avatar.png"
+      alt="NightTeam">
+  <p class="site-author-name" itemprop="name">NightTeam</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://github.com/NightTeam" title="GitHub &rarr; https://github.com/NightTeam" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="mailto:contact@nightteam.cn" title="E-Mail &rarr; mailto:contact@nightteam.cn" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+    
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">NightTeam</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.4.0</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script src="/lib/pjax/pjax.min.js?v=0.2.8"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+<script src="/js/utils.js?v=7.4.0"></script><script src="/js/motion.js?v=7.4.0"></script>
+<script src="/js/schemes/pisces.js?v=7.4.0"></script>
+<script src="/js/next-boot.js?v=7.4.0"></script>
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[pjax], script#page-configurations, #pjax script').forEach(element => {
+    var id = element.id || '';
+    var src = element.src || '';
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (id !=='') {
+      script.id = element.id;
+    }
+    if (src !== '') {
+      script.src = src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+
+  
+
+  
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID: '0db41092506d1fe13c1c',
+      clientSecret: 'e0375c33e4d7dd7caf55d3a663f088e9f07ec8f1',
+      repo: 'nightteam.github.io',
+      owner: 'NightTeam',
+      admin: ['germey'],
+      id: 'f9d97f9a3ad6639859b8aa413df82d16',
+        language: 'zh-CN',
+      
+      distractionFreeMode: 'true'
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+</script>
+
+    </div>
+</body>
+</html>

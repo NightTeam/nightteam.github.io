@@ -57,9 +57,10 @@
 </script>
 
   <meta name="description" content="大家都知道，现在其实很多爬虫代理都已经并不那么好用了，一些 IP 段被大厂查到，很多大厂的站点可以直接检测到你用了代理，所以爬虫代理也被封得越来越严重了。但是现在代理有一个没有怎么开拓的领域，那就是蜂窝移动，即 4G 代理。目前用 4G 蜂窝移动数据来做代理的相对较少，因此可以算是爬虫代理的一个新的发展方向。但怎么来搭建呢？这就是个问题了。 在开始之前，可能需要大家提前了解一下为什么我们要用 4G">
+<meta name="keywords" content="Docker,4G,代理">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Docker 搭建商业级 4G 代理">
-<meta property="og:url" content="http://blog.nightteam.cn/2019/09/21/Docker 搭建商业级 4G 代理/index.html">
+<meta property="og:url" content="http://blog.nightteam.cn/2019/09/21/Docker搭建商业级4G代理/index.html">
 <meta property="og:site_name" content="NightTeam">
 <meta property="og:description" content="大家都知道，现在其实很多爬虫代理都已经并不那么好用了，一些 IP 段被大厂查到，很多大厂的站点可以直接检测到你用了代理，所以爬虫代理也被封得越来越严重了。但是现在代理有一个没有怎么开拓的领域，那就是蜂窝移动，即 4G 代理。目前用 4G 蜂窝移动数据来做代理的相对较少，因此可以算是爬虫代理的一个新的发展方向。但怎么来搭建呢？这就是个问题了。 在开始之前，可能需要大家提前了解一下为什么我们要用 4G">
 <meta property="og:locale" content="zh-CN">
@@ -69,13 +70,12 @@
 <meta property="og:image" content="https://oss.crawler-lab.com/%E5%95%86%E4%B8%9A%E7%BA%A74G%E4%BB%A3%E7%90%86%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97%E3%80%90%E6%90%AD%E5%BB%BA%E7%AF%87%E4%B9%8BDocker%E7%89%88%E3%80%91/asserts/4.png?x-oss-process=style/weixin_wushuiyin">
 <meta property="og:image" content="https://oss.crawler-lab.com/%E5%95%86%E4%B8%9A%E7%BA%A74G%E4%BB%A3%E7%90%86%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97%E3%80%90%E6%90%AD%E5%BB%BA%E7%AF%87%E4%B9%8BDocker%E7%89%88%E3%80%91/asserts/5.png?x-oss-process=style/weixin">
 <meta property="og:image" content="https://oss.crawler-lab.com/%E5%95%86%E4%B8%9A%E7%BA%A74G%E4%BB%A3%E7%90%86%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97%E3%80%90%E6%90%AD%E5%BB%BA%E7%AF%87%E4%B9%8BDocker%E7%89%88%E3%80%91/asserts/6.png?x-oss-process=style/weixin">
-<meta property="og:image" content="https://user-gold-cdn.xitu.io/2019/9/11/16d205d3a2367c2b?w=900&h=383&f=jpeg&s=32674">
-<meta property="og:updated_time" content="2019-09-21T15:42:49.015Z">
+<meta property="og:updated_time" content="2019-09-21T16:18:19.680Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Docker 搭建商业级 4G 代理">
 <meta name="twitter:description" content="大家都知道，现在其实很多爬虫代理都已经并不那么好用了，一些 IP 段被大厂查到，很多大厂的站点可以直接检测到你用了代理，所以爬虫代理也被封得越来越严重了。但是现在代理有一个没有怎么开拓的领域，那就是蜂窝移动，即 4G 代理。目前用 4G 蜂窝移动数据来做代理的相对较少，因此可以算是爬虫代理的一个新的发展方向。但怎么来搭建呢？这就是个问题了。 在开始之前，可能需要大家提前了解一下为什么我们要用 4G">
 <meta name="twitter:image" content="https://oss.crawler-lab.com/%E5%95%86%E4%B8%9A%E7%BA%A74G%E4%BB%A3%E7%90%86%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97%E3%80%90%E6%90%AD%E5%BB%BA%E7%AF%87%E4%B9%8BDocker%E7%89%88%E3%80%91/asserts/1.png?x-oss-process=style/weixin">
-  <link rel="canonical" href="http://blog.nightteam.cn/2019/09/21/Docker 搭建商业级 4G 代理/">
+  <link rel="canonical" href="http://blog.nightteam.cn/2019/09/21/Docker搭建商业级4G代理/">
 
 
 <script id="page-configurations">
@@ -170,6 +170,39 @@
       
       
         
+        <li class="menu-item menu-item-about">
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+      
+      
+      
+        
         <li class="menu-item menu-item-archives">
       
     
@@ -207,7 +240,7 @@
   
   
   <div class="post-block post">
-    <link itemprop="mainEntityOfPage" href="http://blog.nightteam.cn/2019/09/21/Docker 搭建商业级 4G 代理/">
+    <link itemprop="mainEntityOfPage" href="http://blog.nightteam.cn/2019/09/21/Docker搭建商业级4G代理/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="NightTeam">
@@ -235,12 +268,33 @@
                 
               
 
-              <time title="创建时间：2019-09-21 16:40:10 / 修改时间：23:42:49" itemprop="dateCreated datePublished" datetime="2019-09-21T16:40:10+08:00">2019-09-21</time>
+              <time title="创建时间：2019-09-21 16:40:10" itemprop="dateCreated datePublished" datetime="2019-09-21T16:40:10+08:00">2019-09-21</time>
             </span>
           
             
 
             
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-09-22 00:18:19" itemprop="dateModified" datetime="2019-09-22T00:18:19+08:00">2019-09-22</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/代理/" itemprop="url" rel="index"><span itemprop="name">代理</span></a></span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -370,7 +424,6 @@
 </blockquote>
 <p>在使网卡重新搜网后的几秒至十几/几十秒内的时间里，你无法正常拨号，需要等待它初始化完成后才可以拨号成功，具体等待时间以信号强度为准，我测试的时候通常5秒以内就可以了。</p>
 <p>所以如果你在断开后一直拨号失败，不妨过一会儿再试。</p>
-<hr>
 <h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>那么现在操作流程也跑通了，我们也了解到了整个的内部细节，最后要做的就是把每个网卡都分别分配一个容器，这样我们就能实现文章开头所提到的——“使用虚拟网卡作为出网网卡，并使用接入内网的实体网卡作为入网网卡”的效果了。</p>
 <p>实际操作起来的话，就是把指定网卡的部分给配置化，然后在启动容器的时候传入就好了，使用 Docker 的容器环境变量相关设置可以很轻松地实现这个功能。</p>
 <p>最后，我们可以以这个思路，构建一个 docker-compose 模板，模板的核心内容一是做个简易的4G网卡容器集群，二是启动个 Squid，用来聚合代理服务器，这样我们使用的时候只需要指定一个代理服务器就能随机更换了，操作起来更加方便。</p>
@@ -379,11 +432,7 @@
 <p>这个搭建方式并不完美，因为变量太多，而且很多地方肯定不如系统级原生支持的那么稳定，长期使用可能会出现各种奇奇怪怪的问题。</p>
 <p>然后 Docker 的资源占用其实挺高的，会浪费相当多的内存在启动容器上，如果只是两三个网卡还好，如果数量大一点的话，像树莓派2B 这种小内存的设备根本就扛不住。</p>
 <p>另外代理服务器本身对资源的消耗也是比较高的，高频调用下对树莓派2B 的小 CPU 压力还是蛮大的，即使我对它的 CPU 进行了超频，在并发测试时也还是会出现轻松打满 CPU 的情况。</p>
-<p><strong>但是！截止目前，我还有两种基于路由器系统的搭建方案没写出来！所以…敬请期待后续的其他搭建方案（斜眼笑）。</strong></p>
-<p>文章作者：「夜幕团队 NightTeam」 - Loco</p>
-<p>夜幕团队成立于 2019 年，团队包括崔庆才、周子淇、陈祥安、唐轶飞、冯威、蔡晋、戴煌金、张冶青和韦世东。</p>
-<p>涉猎的编程语言包括但不限于 Python、Rust、C++、Go，领域涵盖爬虫、深度学习、服务研发、对象存储等。团队非正亦非邪，只做认为对的事情，请大家小心。</p>
-<p><img src="https://user-gold-cdn.xitu.io/2019/9/11/16d205d3a2367c2b?w=900&amp;h=383&amp;f=jpeg&amp;s=32674" alt></p>
+<p>但是！截止目前，我还有两种基于路由器系统的搭建方案没写出来！所以…敬请期待后续的其他搭建方案。</p>
 
     </div>
 
@@ -400,7 +449,7 @@
     <strong>本文作者： </strong>NightTeam</li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://blog.nightteam.cn/2019/09/21/Docker 搭建商业级 4G 代理/" title="Docker 搭建商业级 4G 代理">http://blog.nightteam.cn/2019/09/21/Docker 搭建商业级 4G 代理/</a>
+    <a href="http://blog.nightteam.cn/2019/09/21/Docker搭建商业级4G代理/" title="Docker 搭建商业级 4G 代理">http://blog.nightteam.cn/2019/09/21/Docker搭建商业级4G代理/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！</li>
@@ -410,21 +459,34 @@
       
 
       <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/Docker/" rel="tag"># Docker</a>
+            
+              <a href="/tags/4G/" rel="tag"># 4G</a>
+            
+              <a href="/tags/代理/" rel="tag"># 代理</a>
+            
+          </div>
+        
 
         
 
           <div class="post-nav">
             <div class="post-nav-next post-nav-item">
               
-                <a href="/2019/09/20/hello-world/" rel="next" title="Hello World">
-                  <i class="fa fa-chevron-left"></i> Hello World
-                </a>
-              
             </div>
 
             <span class="post-nav-divider"></span>
 
             <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/09/21/如何将协议规范变成开源库系列之WebSocket/" rel="prev" title="如何将协议规范变成开源库系列之 WebSocket">
+                  如何将协议规范变成开源库系列之 WebSocket <i class="fa fa-chevron-right"></i>
+                </a>
               
             </div>
           </div>
@@ -442,6 +504,9 @@
 
           </div>
           
+    
+    <div class="comments" id="gitalk-container"></div>
+  
 
         </div>
           
@@ -491,8 +556,34 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">2</span>
+          <span class="site-state-item-count">3</span>
           <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">标签</span>
         </a>
       </div>
     
@@ -501,6 +592,30 @@
     <a href="/atom.xml" rel="alternate">
       <i class="fa fa-rss"></i>RSS
     </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://github.com/NightTeam" title="GitHub &rarr; https://github.com/NightTeam" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="mailto:contact@nightteam.cn" title="E-Mail &rarr; mailto:contact@nightteam.cn" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+    
   </div>
 
 
@@ -639,6 +754,25 @@ window.addEventListener('pjax:success', () => {
   
 
   
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID: '0db41092506d1fe13c1c',
+      clientSecret: 'e0375c33e4d7dd7caf55d3a663f088e9f07ec8f1',
+      repo: 'nightteam.github.io',
+      owner: 'NightTeam',
+      admin: ['germey'],
+      id: '3d7442e393a449c4ff9206468aed72e0',
+        language: 'zh-CN',
+      
+      distractionFreeMode: 'true'
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+</script>
 
     </div>
 </body>

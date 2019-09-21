@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png?v=7.4.0">
+  <link rel="mask-icon" href="/images/safari-pinned-tab.svg?v=7.4.0" color="#222">
+  <link rel="alternate" href="/atom.xml" title="NightTeam" type="application/atom+xml">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.4.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":"mac"},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: true,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="这是系列文章的第一篇，也是非常重要的一篇，希望大家能读懂我想要表达的意思。 系列文章开篇概述相对于其他编程语言来说，Python 生态中最突出的就是第三方库。任何一个及格的 Python 开发者都使用过至少 5 款第三方库。 就爬虫领域而言，必将用到的例如网络请求库 Requests、网页解析库 Parsel 或 BeautifulSoup、数据库对象关系映射  Motor 或 SQLAlchem">
+<meta name="keywords" content="WebSocket">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何将协议规范变成开源库系列之 WebSocket">
+<meta property="og:url" content="http://blog.nightteam.cn/2019/09/21/如何将协议规范变成开源库系列之WebSocket/index.html">
+<meta property="og:site_name" content="NightTeam">
+<meta property="og:description" content="这是系列文章的第一篇，也是非常重要的一篇，希望大家能读懂我想要表达的意思。 系列文章开篇概述相对于其他编程语言来说，Python 生态中最突出的就是第三方库。任何一个及格的 Python 开发者都使用过至少 5 款第三方库。 就爬虫领域而言，必将用到的例如网络请求库 Requests、网页解析库 Parsel 或 BeautifulSoup、数据库对象关系映射  Motor 或 SQLAlchem">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2019/9/14/16d2dd8be3d2254d?w=1376&h=910&f=png&s=1290872">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2019/9/14/16d2dda24b0853ed?w=312&h=312&f=png&s=127644">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2019/9/14/16d2de0cdaef77c5?w=538&h=282&f=png&s=104780">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2019/9/14/16d2de2d6c55bdcd?w=900&h=383&f=png&s=222353">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2019/9/14/16d2de4a2f5a3b5d?w=978&h=600&f=png&s=74626">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2019/9/14/16d2b6eccf4d7221?w=1240&h=672&f=jpeg&s=44507">
+<meta property="og:updated_time" content="2019-09-21T16:24:45.703Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何将协议规范变成开源库系列之 WebSocket">
+<meta name="twitter:description" content="这是系列文章的第一篇，也是非常重要的一篇，希望大家能读懂我想要表达的意思。 系列文章开篇概述相对于其他编程语言来说，Python 生态中最突出的就是第三方库。任何一个及格的 Python 开发者都使用过至少 5 款第三方库。 就爬虫领域而言，必将用到的例如网络请求库 Requests、网页解析库 Parsel 或 BeautifulSoup、数据库对象关系映射  Motor 或 SQLAlchem">
+<meta name="twitter:image" content="https://user-gold-cdn.xitu.io/2019/9/14/16d2dd8be3d2254d?w=1376&h=910&f=png&s=1290872">
+  <link rel="canonical" href="http://blog.nightteam.cn/2019/09/21/如何将协议规范变成开源库系列之WebSocket/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>如何将协议规范变成开源库系列之 WebSocket | NightTeam</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">NightTeam</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-about">
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/NightTeam" class="github-corner" title="NightTeam GitHub" aria-label="NightTeam GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="http://blog.nightteam.cn/2019/09/21/如何将协议规范变成开源库系列之WebSocket/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="NightTeam">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="NightTeam">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">如何将协议规范变成开源库系列之 WebSocket
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2019-09-21 23:50:33" itemprop="dateCreated datePublished" datetime="2019-09-21T23:50:33+08:00">2019-09-21</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-09-22 00:24:45" itemprop="dateModified" datetime="2019-09-22T00:24:45+08:00">2019-09-22</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/实用类库/" itemprop="url" rel="index"><span itemprop="name">实用类库</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>这是系列文章的第一篇，也是非常重要的一篇，希望大家能读懂我想要表达的意思。</p>
+<h1 id="系列文章开篇概述"><a href="#系列文章开篇概述" class="headerlink" title="系列文章开篇概述"></a>系列文章开篇概述</h1><p>相对于其他编程语言来说，Python 生态中最突出的就是第三方库。任何一个及格的 Python 开发者都使用过至少 5 款第三方库。</p>
+<p>就爬虫领域而言，必将用到的例如网络请求库 Requests、网页解析库 Parsel 或 BeautifulSoup、数据库对象关系映射  Motor 或 SQLAlchemy、定时任务 Apscheduler、爬虫框架 Scrapy 等。</p>
+<p><img src="https://user-gold-cdn.xitu.io/2019/9/14/16d2dd8be3d2254d?w=1376&amp;h=910&amp;f=png&amp;s=1290872" alt></p>
+<p>这些开源库的使用方法想必大家已经非常熟练了，甚至还修炼出了自己的一套技巧，日常工作中敲起键盘肯定也是哒哒哒的响。</p>
+<p>但是你有没有想过：</p>
+<ul>
+<li>那个神奇的功能是如何实现的？</li>
+<li>这个功能背后的逻辑是什么？</li>
+<li>为什么要这样做而不是选择另一种写法？</li>
+<li>编写这样的库需要用到哪些知识？</li>
+<li>这个论点是否有明确的依据？</li>
+</ul>
+<p><img src="https://user-gold-cdn.xitu.io/2019/9/14/16d2dda24b0853ed?w=312&amp;h=312&amp;f=png&amp;s=127644" alt><br>如果你从未这样想过，那说明你还没到达应该「渡劫」的时机；如果你曾提出过 3 个以上的疑问，那说明你即将到达那个重要的关口；如果你常常这么想，而且也尝试着寻找对应的答案，那么恭喜你，你现在正处于「渡劫」的关口之上。</p>
+<p><img src="https://user-gold-cdn.xitu.io/2019/9/14/16d2de0cdaef77c5?w=538&amp;h=282&amp;f=png&amp;s=104780" alt><br>偶有群友会抛出这样的问题：初级工程师、中级工程师、高级工程师如何界定？</p>
+<p>这个问题有两种不同的观点，第一个是看工作职级，第二个则是看个人能力。工作职级是一个浮动很大的参照物，例如阿里巴巴的高级研发和我司的高级研发，职级名称都是「高级研发」，但能力可能会有很大的差距。</p>
+<p>个人能力又如何评定呢？</p>
+<p>难不成看代码写的快还是写的慢吗？</p>
+<p>当然不是！</p>
+<p>个人能力应当从广度和深度两个方面进行考量，这并没有一个明确的标准。当两人能力差异很大的时候，外人可以轻松的分辨孰强孰弱。</p>
+<p>自己怎样分辨个人能力的进与退呢？</p>
+<p>这就回到了上面提到的那些问题：WHO WHAT WHERE WHY WHEN HOW？</p>
+<p>我想通过这篇文章告诉你，不要做那个用库用得很熟练的人，要做那个创造库的人。计算机世界如此吸引人，就是因为我们可以在这个世界里尽情创造。</p>
+<p>你想做一个创造者吗？</p>
+<p>如果不想，那现在你就可以关掉浏览器窗口，回到 Hub 的世界里。</p>
+<h1 id="内容介绍"><a href="#内容介绍" class="headerlink" title="内容介绍"></a>内容介绍</h1><p>这是一套系列文章，这个系列将为大家解读常见库（例如 WebSocket、HTTP、ASCII、Base64、MD5、AES、RSA）的协议规范和对应的代码实现，帮助大家「知其然，知其所以然」。</p>
+<h2 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h2><p>这次我们要学习的是 WebSocket 协议规范和代码实现，也可以理解为从 0 开始编写 <a href="https://github.com/asyncins/aiowebsocket" target="_blank" rel="noopener">aiowebsocket</a> 库。至于为什么选择它，那大概是因为全世界没有比我更熟悉的它的人了。</p>
+<p><img src="https://user-gold-cdn.xitu.io/2019/9/14/16d2de2d6c55bdcd?w=900&amp;h=383&amp;f=png&amp;s=222353" alt></p>
+<p>我是 aiowebsocket 库的作者，我花了 7 天编写这个库。写库的过程，让我深刻体会到造轮子和驾驶的区别，也让我有了飞速的进步。我希望用连载系列文章的形式帮助大家从驾驶者转换到创造者，拥有「编程思考」。</p>
+<h2 id="前置条件"><a href="#前置条件" class="headerlink" title="前置条件"></a>前置条件</h2><p>WebSocket 是一种在单个 TCP 连接上进行全双工通信的协议，它的出现使客户端和服务器之间的数据交换变得更加简单。下图描述了双端交互的流程:</p>
+<p><img src="https://user-gold-cdn.xitu.io/2019/9/14/16d2de4a2f5a3b5d?w=978&amp;h=600&amp;f=png&amp;s=74626" alt></p>
+<p>WebSocket 通常被应用在实时性要求较高的场景，例如赛事数据、股票证券、网页聊天和在线绘图等。WebSocket 与 HTTP 协议完全不同，但同样被广泛应用。</p>
+<p>无论是后端开发者、前端开发者、爬虫工程师或者信息安全工作者，都应该掌握 WebSocket 协议的知识。</p>
+<p>我曾经发表过几篇关于 WebSocket 的文章：</p>
+<ul>
+<li><a href="https://juejin.im/post/5d4cbc0cf265da038f47fa37" target="_blank" rel="noopener">【严选-高质量文章】开发者必知必会的 WebSocket 协议</a></li>
+<li><a href="https://juejin.im/post/5c80b768f265da2dae514d4f" target="_blank" rel="noopener">Python如何爬取实时变化的WebSocket数据</a></li>
+<li><a href="https://juejin.im/post/5c7cdaabf265da2daf79c15f" target="_blank" rel="noopener">WebSocket 从入门到写出开源库</a></li>
+</ul>
+<p>其中，《【严选-高质量文章】开发者必知必会的 WebSocket 协议》介绍了协议规范的相关知识。这篇文章的内容大体如下：</p>
+<ul>
+<li>WebSocket 协议来源</li>
+<li>WebSocket 协议的优点</li>
+<li>WebSocket 协议规范</li>
+<li>一些实际代码演示</li>
+</ul>
+<p>如果没有掌握 WebSocket 协议的朋友，我建议先去阅读这篇文章，尤其是对 <a href="https://juejin.im/post/5d4cbc0cf265da038f47fa37#heading-4" target="_blank" rel="noopener">WebSocket 协议规范</a>介绍的那部分。</p>
+<p>要想将协议规范 RFC6455 变成开源库，第一步就是要熟悉整个协议规范，所以你需要阅读<a href="https://juejin.im/post/5d4cbc0cf265da038f47fa37" target="_blank" rel="noopener">【严选-高质量文章】开发者必知必会的 WebSocket 协议</a>。当然，有能力的同学直接阅读 RFC6455 也未尝不可。</p>
+<p>接着还需要了解编程语言中内置库 Socket 的基础用法，例如 Python 中的 <a href="https://docs.python.org/3/library/socket.html?highlight=socket#module-socket" target="_blank" rel="noopener">socket</a> 或者更高级更潮的 <a href="https://docs.python.org/3/library/asyncio-stream.html" target="_blank" rel="noopener">Streams</a>、<a href="https://docs.python.org/3/library/asyncio-protocol.html" target="_blank" rel="noopener">Transports and Protocols</a>。如果你是 Go 开发者、Rust 开发者，请查找对应语言的内置库。</p>
+<p>假设你已经熟悉了 RFC6455，你应该知道 Frame 打包和解包的时候需要用到位运算，正好我之前写过位运算相关的文章 <a href="https://gitbook.cn/gitchat/activity/5d4d6d8f6f29256fa317e946" target="_blank" rel="noopener">7分钟全面了解位运算</a>。</p>
+<p>至于其它的，现用现学吧！</p>
+<h1 id="Python-网络通信之-Streams"><a href="#Python-网络通信之-Streams" class="headerlink" title="Python 网络通信之 Streams"></a>Python 网络通信之 Streams</h1><p>WebSocket，也可以理解为在 WEB 应用中使用的 Socket，这意味着本篇将会涉及到 Socket 编程。上面提到，Python 中与 Socket 相关的有 socket、Streams、Transports and Protocols。其中 socket 是同步的，而另外两个是异步的，这俩属于你常听到的 asyncio。</p>
+<h2 id="Socket-通信过程"><a href="#Socket-通信过程" class="headerlink" title="Socket 通信过程"></a>Socket 通信过程</h2><p>Socket 是端到端的通信，所以我们要搞清楚消息是怎么从一台机器发送到另一台机器的，这很重要。假设通信的两台机器为 Client 和 Server，Client 向 Server 发送消息的过程如下图所示：</p>
+<p><img src="https://user-gold-cdn.xitu.io/2019/9/14/16d2b6eccf4d7221?w=1240&amp;h=672&amp;f=jpeg&amp;s=44507" alt></p>
+<blockquote>
+<p>Client 通过文件描述符的读写 API  read &amp; write 来访问操作系统内核中的网络模块为当前套接字分配的发送  send buffer 和接收 recv buffer 缓存。</p>
+<p>Client 进程写消息到内核的发送缓存中，内核将发送缓存中的数据传送到物理硬件 NIC，也就是网络接口芯片 (Network Interface Circuit)。</p>
+<p>NIC 负责将翻译出来的模拟信号通过网络硬件传递到服务器硬件的 NIC。</p>
+<p>服务器的 NIC 再将模拟信号转成字节数据存放到内核为套接字分配的接收缓存中，最终服务器进程从接收缓存中读取数据即为源客户端进程传递过来的 消息。</p>
+</blockquote>
+<p>上述通信过程的描述和图片均出自钱文品的深入理解 RPC 交互流程。</p>
+<p>我尝试寻找通信过程中每个步骤的依据（尤其是 send buffer to NIC to recv buffer），（我翻阅了 TCP 的 RFC 和 Kernel.org）但遗憾的是并未找到有力的证明（一定是我太菜了），如果有朋友知道，可以评论告诉我或发邮件 zenrusts@sina.com 告诉我，我可以扩展出另一篇文章。</p>
+<h2 id="创建-Streams"><a href="#创建-Streams" class="headerlink" title="创建 Streams"></a>创建 Streams</h2><p>那么问题来了：在 Python 中，我们如何实现端到端的消息发送呢？</p>
+<p>答：Python 提供了一些对象帮助我们实现这个需求，其中相对简单易用的是 Streams。</p>
+<p>Streams 是 Python Asynchronous I/O 中提供的 High-level APIs。Python 官方文档对 Streams 的介绍如下：</p>
+<blockquote>
+<p>Streams are high-level async/await-ready primitives to work with network connections. Streams allow sending and receiving data without using callbacks or low-level protocols and transports.</p>
+</blockquote>
+<p>我尬译一下：Streams 是用于网络连接的 high-level async/await-ready 原语。Streams 允许在不使用回调或 low-level protocols and transports 的情况下发送和接收数据。</p>
+<p>Python 提供了 <code>asyncio.open_connection()</code> 让开发者创建 Streams，<code>asyncio.open_connection()</code> 将建立网络连接并返回 reader 和 writer 对象，这两个对象其实是 StreamReader 和 StreamWriter 类的实例。</p>
+<p>开发者可以通过 StreamReader 从 IO 流中读取数据，通过 StreamWriter 将数据写入 IO 流。虽然文档并没有给出 IO 流的明确定义，但我猜它跟 buffer （也就是 send buffer to NIC to recv buffer 中的 buffer）有关，你也可以抽象的认为它就是 buffer。</p>
+<p>有了 Streams，就有了端到端消息发送的完整实现。下面将通过一个例子来熟悉 Streams 的用法和用途。这是 Python 官方文档给出的双端示例，首先是 Server 端：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"># TCP echo server using streams</span><br><span class="line"># 本文出自「夜幕团队 NightTeam」 转载请联系并取得授权</span><br><span class="line">import asyncio</span><br><span class="line"></span><br><span class="line">async def handle_echo(reader, writer):</span><br><span class="line">    data = await reader.read(100)</span><br><span class="line">    message = data.decode()</span><br><span class="line">    addr = writer.get_extra_info(&apos;peername&apos;)</span><br><span class="line"></span><br><span class="line">    print(f&quot;Received &#123;message!r&#125; from &#123;addr!r&#125;&quot;)</span><br><span class="line"></span><br><span class="line">    print(f&quot;Send: &#123;message!r&#125;&quot;)</span><br><span class="line">    writer.write(data)</span><br><span class="line">    await writer.drain()</span><br><span class="line"></span><br><span class="line">    print(&quot;Close the connection&quot;)</span><br><span class="line">    writer.close()</span><br><span class="line"></span><br><span class="line">async def main():</span><br><span class="line">    server = await asyncio.start_server(</span><br><span class="line">        handle_echo, &apos;127.0.0.1&apos;, 8888)</span><br><span class="line"></span><br><span class="line">    addr = server.sockets[0].getsockname()</span><br><span class="line">    print(f&apos;Serving on &#123;addr&#125;&apos;)</span><br><span class="line"></span><br><span class="line">    async with server:</span><br><span class="line">        await server.serve_forever()</span><br><span class="line"></span><br><span class="line">asyncio.run(main())</span><br></pre></td></tr></table></figure>
+<p>接着是 Client 端：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"># TCP echo client using streams</span><br><span class="line"># 本文出自「夜幕团队 NightTeam」 转载请联系并取得授权</span><br><span class="line">import asyncio</span><br><span class="line"></span><br><span class="line">async def tcp_echo_client(message):</span><br><span class="line">    reader, writer = await asyncio.open_connection(</span><br><span class="line">        &apos;127.0.0.1&apos;, 8888)</span><br><span class="line"></span><br><span class="line">    print(f&apos;Send: &#123;message!r&#125;&apos;)</span><br><span class="line">    writer.write(message.encode())</span><br><span class="line"></span><br><span class="line">    data = await reader.read(100)</span><br><span class="line">    print(f&apos;Received: &#123;data.decode()!r&#125;&apos;)</span><br><span class="line"></span><br><span class="line">    print(&apos;Close the connection&apos;)</span><br><span class="line">    writer.close()</span><br><span class="line"></span><br><span class="line">asyncio.run(tcp_echo_client(&apos;Hello World!&apos;))</span><br></pre></td></tr></table></figure>
+<p>将示例分别写入到 server.py 和 client.py 中，然后按序运行。此时 server.py 的窗口会输出如下内容：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Serving on (&apos;127.0.0.1&apos;, 8888)</span><br><span class="line">Received &apos;Hello World!&apos; from (&apos;127.0.0.1&apos;, 59534)</span><br><span class="line">Send: &apos;Hello World!&apos;</span><br><span class="line">Close the connection</span><br></pre></td></tr></table></figure>
+<p>从输出中得知，服务启动的 address 和 port 为 <code>(&#39;127.0.0.1&#39;, 8888)</code>，从 <code>(&#39;127.0.0.1&#39;, 59534)</code> 读取到内容为 <code>Hello World!</code> 的消息，接着将 <code>Hello World!</code> 返回给  <code>(&#39;127.0.0.1&#39;, 59534)</code> ，最后关闭连接。</p>
+<p>client.py 的窗口输出内容如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Send: &apos;Hello World!&apos;</span><br><span class="line">Received: &apos;Hello World!&apos;</span><br><span class="line">Close the connection</span><br></pre></td></tr></table></figure>
+<p>在创建连接后，Client 向指定的端发送了内容为 <code>Hello World!</code>  的消息，接着从指定的端接收到内容为  <code>Hello World!</code>  的消息，最后关闭连接。</p>
+<p>有些读者可能不太理解，为什么 Client Send  <code>Hello World!</code> ，而 Server 接收到之后也向 Client Send  <code>Hello World!</code> 。双端的 Send 和 Received 都是  <code>Hello World!</code> ，这很容易让新手懵逼。实际上这就是一个普通的回显服务器示例，也就是说当 Server 收到消息时，将消息内容原封不动的返回给 Client。</p>
+<p>这样只是为了演示，并无它意，但这样的示例却会给新手带来困扰。</p>
+<p>以上是一个简单的 Socket 编程示例，整体思路理解起来还是很轻松的，接下来我们将逐步解读示例中的代码：</p>
+<pre><code>* client.py 中用 `asyncio.open_connection()` 连接指定的端，并获得 reader 和 writer 这两个对象。
+* 然后使用 writer 对象中的 `write()` 方法将 `Hello World!` 写入到 IO 流中，该消息会被发送到 Server。
+* 接着使用 reader 对象中的 `read()` 方法从 IO 流中读取消息，并将消息打印到终端。
+</code></pre><p>看到这里，你或许会有另一个疑问：<code>write()</code> 只是将消息写入到 IO 流，并没有发送行为，那消息是如何传输到 Server 的呢？</p>
+<p>由于无法直接跟进 CPython 源代码，所以我们无法得到确切的结果。但我们可以跟进 Python 代码，得知消息最后传输到 <code>transport.write()</code> ，如果你想知道更多，可以去看 Transports and Protocols 的介绍。你可以将这个过程抽象为上图的 Client to  send buffer to NIC to recv buffer to Server。</p>
+<h1 id="功能模块设计"><a href="#功能模块设计" class="headerlink" title="功能模块设计"></a>功能模块设计</h1><p>通过上面的学习，现在你已经掌握了 WebSocket 协议规范和 Python Streams 的基本用法，接下来就可以设计一个 WebSocket 客户端库了。</p>
+<p>根据 RFC6455 的约定，WebSocket 之前是 HTTP，通过「握手」来升级协议。协议升级后进入真正的 WebSocket 通信，通信包含发送（Send）和接收（Recv）。文本消息要在传输过程前转换为 Frames，而接受端读取到消息后要将 Frames 转换成文本。当然，期间会有一些异常产生，我们可能需要自定义异常，以快速定位问题所在。现在我们得出了几个模块：</p>
+<pre><code>* 握手 - ShakeHands
+
+* 传输 - Transports
+
+* 帧处理 - Frames
+
+* 异常 - Exceptions
+</code></pre><p>一切准备就绪后，就可以进入真正的编码环节了。</p>
+<p>由于实战编码篇幅太长，我决定放到下一期，这期的内容，读者们可能需要花费一些时间吸收。</p>
+<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>开篇我强调了「创造能力」有多么重要，甚至抛出了一些不是很贴切的例子，但我就是想告诉你，不要做调参🐶。</p>
+<p>然后我告诉你，本篇文章要讲解的是 WebSocket。</p>
+<p>接着又跟你说，要掌握 WebSocket 协议，如果你无法独立啃完 RFC6455，还可以看我写过的几篇关于 WebSocket 文章和位运算文章。</p>
+<p>过了几分钟，给你展示了 Socket 的通信过程，虽然没有强有力的依据，但你可以假设这是对的。</p>
+<p>喝了一杯白开水之后，我向你展示了 Streams 的具体用法并为你解读代码的作用，重要的是将 Streams 与 Socket 通信过程进行了抽象。</p>
+<p>这些前置条件都确定后，我又带着你草草地设计了 WebSocket 客户端的功能模块。</p>
+<p>下一篇文章将进入代码实战环节，请做好环境（Python 3.6+）准备。</p>
+<p>总之，要想越过前面这座山，就请跟我来！</p>
+
+    </div>
+
+    
+    
+    
+        
+      
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>NightTeam</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://blog.nightteam.cn/2019/09/21/如何将协议规范变成开源库系列之WebSocket/" title="如何将协议规范变成开源库系列之 WebSocket">http://blog.nightteam.cn/2019/09/21/如何将协议规范变成开源库系列之WebSocket/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！</li>
+</ul>
+</div>
+
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/WebSocket/" rel="tag"># WebSocket</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/09/21/Docker搭建商业级4G代理/" rel="next" title="Docker 搭建商业级 4G 代理">
+                  <i class="fa fa-chevron-left"></i> Docker 搭建商业级 4G 代理
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/09/22/AndServer+Service打造Android服务器实现so文件调用/" rel="prev" title="AndServer+Service 打造 Android 服务器实现 so 文件调用">
+                  AndServer+Service 打造 Android 服务器实现 so 文件调用 <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+    
+    <div class="comments" id="gitalk-container"></div>
+  
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#系列文章开篇概述"><span class="nav-number">1.</span> <span class="nav-text">系列文章开篇概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#内容介绍"><span class="nav-number">2.</span> <span class="nav-text">内容介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#目标"><span class="nav-number">2.1.</span> <span class="nav-text">目标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#前置条件"><span class="nav-number">2.2.</span> <span class="nav-text">前置条件</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Python-网络通信之-Streams"><span class="nav-number">3.</span> <span class="nav-text">Python 网络通信之 Streams</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Socket-通信过程"><span class="nav-number">3.1.</span> <span class="nav-text">Socket 通信过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建-Streams"><span class="nav-number">3.2.</span> <span class="nav-text">创建 Streams</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#功能模块设计"><span class="nav-number">4.</span> <span class="nav-text">功能模块设计</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#小结"><span class="nav-number">5.</span> <span class="nav-text">小结</span></a></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="/images/avatar.png"
+      alt="NightTeam">
+  <p class="site-author-name" itemprop="name">NightTeam</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://github.com/NightTeam" title="GitHub &rarr; https://github.com/NightTeam" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="mailto:contact@nightteam.cn" title="E-Mail &rarr; mailto:contact@nightteam.cn" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+    
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">NightTeam</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.4.0</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script src="/lib/pjax/pjax.min.js?v=0.2.8"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+<script src="/js/utils.js?v=7.4.0"></script><script src="/js/motion.js?v=7.4.0"></script>
+<script src="/js/schemes/pisces.js?v=7.4.0"></script>
+<script src="/js/next-boot.js?v=7.4.0"></script>
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[pjax], script#page-configurations, #pjax script').forEach(element => {
+    var id = element.id || '';
+    var src = element.src || '';
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (id !=='') {
+      script.id = element.id;
+    }
+    if (src !== '') {
+      script.src = src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+
+  
+
+  
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID: '0db41092506d1fe13c1c',
+      clientSecret: 'e0375c33e4d7dd7caf55d3a663f088e9f07ec8f1',
+      repo: 'nightteam.github.io',
+      owner: 'NightTeam',
+      admin: ['germey'],
+      id: 'd2dfa34a8da084562d54af1c1273b124',
+        language: 'zh-CN',
+      
+      distractionFreeMode: 'true'
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+</script>
+
+    </div>
+</body>
+</html>
