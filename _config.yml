@@ -4,8 +4,8 @@
 
 # Site
 title: NightTeam
-subtitle: 
-description: 
+subtitle: 一个专注技术的组织.
+description: 涉猎的主要编程语言为 Python、Rust、C++、Go，领域涵盖爬虫、深度学习、服务研发和对象存储等。
 keywords: "Python, Rust, C++, Go, 爬虫, 深度学习, 服务研发, 对象存储"
 author: NightTeam
 language: zh-CN
@@ -13,7 +13,7 @@ timezone:
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: http://blog.nightteam.cn/
+url: https://blog.nightteam.cn/
 root: /
 permalink: :year/:month/:day/:title/
 permalink_defaults:
