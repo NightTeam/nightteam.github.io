@@ -2,12 +2,12 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
   <title>NightTeam</title>
   
-  
+  <subtitle>一个专注技术的组织</subtitle>
   <link href="/atom.xml" rel="self"/>
   
-  <link href="http://blog.nightteam.cn/"/>
+  <link href="https://blog.nightteam.cn/"/>
   <updated>2019-09-21T17:36:20.097Z</updated>
-  <id>http://blog.nightteam.cn/</id>
+  <id>https://blog.nightteam.cn/</id>
   
   <author>
     <name>NightTeam</name>
@@ -18,8 +18,8 @@
   
   <entry>
     <title>AndServer+Service 打造 Android 服务器实现 so 文件调用</title>
-    <link href="http://blog.nightteam.cn/2019/09/22/AndServer+Service%E6%89%93%E9%80%A0Android%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%9E%E7%8E%B0so%E6%96%87%E4%BB%B6%E8%B0%83%E7%94%A8/"/>
-    <id>http://blog.nightteam.cn/2019/09/22/AndServer+Service打造Android服务器实现so文件调用/</id>
+    <link href="https://blog.nightteam.cn/2019/09/22/AndServer+Service%E6%89%93%E9%80%A0Android%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%9E%E7%8E%B0so%E6%96%87%E4%BB%B6%E8%B0%83%E7%94%A8/"/>
+    <id>https://blog.nightteam.cn/2019/09/22/AndServer+Service打造Android服务器实现so文件调用/</id>
     <published>2019-09-21T16:23:08.953Z</published>
     <updated>2019-09-21T17:36:20.097Z</updated>
     
@@ -32,19 +32,19 @@
     </summary>
     
     
-      <category term="逆向" scheme="http://blog.nightteam.cn/categories/%E9%80%86%E5%90%91/"/>
+      <category term="逆向" scheme="https://blog.nightteam.cn/categories/%E9%80%86%E5%90%91/"/>
     
     
-      <category term="AndServer" scheme="http://blog.nightteam.cn/tags/AndServer/"/>
+      <category term="AndServer" scheme="https://blog.nightteam.cn/tags/AndServer/"/>
     
-      <category term="Android" scheme="http://blog.nightteam.cn/tags/Android/"/>
+      <category term="Android" scheme="https://blog.nightteam.cn/tags/Android/"/>
     
   </entry>
   
   <entry>
     <title>如何将协议规范变成开源库系列之 WebSocket</title>
-    <link href="http://blog.nightteam.cn/2019/09/21/%E5%A6%82%E4%BD%95%E5%B0%86%E5%8D%8F%E8%AE%AE%E8%A7%84%E8%8C%83%E5%8F%98%E6%88%90%E5%BC%80%E6%BA%90%E5%BA%93%E7%B3%BB%E5%88%97%E4%B9%8BWebSocket/"/>
-    <id>http://blog.nightteam.cn/2019/09/21/如何将协议规范变成开源库系列之WebSocket/</id>
+    <link href="https://blog.nightteam.cn/2019/09/21/%E5%A6%82%E4%BD%95%E5%B0%86%E5%8D%8F%E8%AE%AE%E8%A7%84%E8%8C%83%E5%8F%98%E6%88%90%E5%BC%80%E6%BA%90%E5%BA%93%E7%B3%BB%E5%88%97%E4%B9%8BWebSocket/"/>
+    <id>https://blog.nightteam.cn/2019/09/21/如何将协议规范变成开源库系列之WebSocket/</id>
     <published>2019-09-21T15:50:33.726Z</published>
     <updated>2019-09-21T17:35:15.594Z</updated>
     
@@ -57,17 +57,17 @@
     </summary>
     
     
-      <category term="实用类库" scheme="http://blog.nightteam.cn/categories/%E5%AE%9E%E7%94%A8%E7%B1%BB%E5%BA%93/"/>
+      <category term="实用类库" scheme="https://blog.nightteam.cn/categories/%E5%AE%9E%E7%94%A8%E7%B1%BB%E5%BA%93/"/>
     
     
-      <category term="WebSocket" scheme="http://blog.nightteam.cn/tags/WebSocket/"/>
+      <category term="WebSocket" scheme="https://blog.nightteam.cn/tags/WebSocket/"/>
     
   </entry>
   
   <entry>
     <title>Docker 搭建商业级 4G 代理</title>
-    <link href="http://blog.nightteam.cn/2019/09/21/Docker%E6%90%AD%E5%BB%BA%E5%95%86%E4%B8%9A%E7%BA%A74G%E4%BB%A3%E7%90%86/"/>
-    <id>http://blog.nightteam.cn/2019/09/21/Docker搭建商业级4G代理/</id>
+    <link href="https://blog.nightteam.cn/2019/09/21/Docker%E6%90%AD%E5%BB%BA%E5%95%86%E4%B8%9A%E7%BA%A74G%E4%BB%A3%E7%90%86/"/>
+    <id>https://blog.nightteam.cn/2019/09/21/Docker搭建商业级4G代理/</id>
     <published>2019-09-21T08:40:10.233Z</published>
     <updated>2019-09-21T17:40:02.884Z</updated>
     
@@ -80,14 +80,14 @@
     </summary>
     
     
-      <category term="代理" scheme="http://blog.nightteam.cn/categories/%E4%BB%A3%E7%90%86/"/>
+      <category term="代理" scheme="https://blog.nightteam.cn/categories/%E4%BB%A3%E7%90%86/"/>
     
     
-      <category term="Docker" scheme="http://blog.nightteam.cn/tags/Docker/"/>
+      <category term="Docker" scheme="https://blog.nightteam.cn/tags/Docker/"/>
     
-      <category term="4G" scheme="http://blog.nightteam.cn/tags/4G/"/>
+      <category term="4G" scheme="https://blog.nightteam.cn/tags/4G/"/>
     
-      <category term="代理" scheme="http://blog.nightteam.cn/tags/%E4%BB%A3%E7%90%86/"/>
+      <category term="代理" scheme="https://blog.nightteam.cn/tags/%E4%BB%A3%E7%90%86/"/>
     
   </entry>
   
